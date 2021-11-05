@@ -18,8 +18,11 @@
         var input = queryParams.get("search");
         /*document.getElementById('search-terms').value = input;*/
         var urlSearch = "http://dbpedia.org/sparql";
-
-        var query = [
+        var query = ["SELECT DISTINCT ?manga WHERE { ?manga dbo:type dbr:Manga.",
+        "FILTER( regex(?manga, "+input+"))",
+        "}",
+        ].join(" ");
+        /*var query = [
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
             "SELECT * WHERE {",
             "?uri rdfs:label ?name;",
@@ -29,12 +32,12 @@
             "dbo:publisher ?publisher;",
             "dbp:magazine ?magazine;",
             "dbp:volumes ?numberOfVolumes.",
-            "FILTER (regex(?uri, "+input+")",
+            "FILTER (?uri = dbr:"+input,
             "&& lang(?name)=\"en\"",
             "&& lang(?description)=\"en\")",
             "}",
             "Limit 1"
-        ].join(" ");
+        ].join(" ");*/
         var queryUrl = urlSearch + "?query=" + encodeURIComponent(query) + "&format=json";
         console.log(queryUrl);
         $.ajax({
