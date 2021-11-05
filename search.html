@@ -29,7 +29,7 @@
             "dbo:publisher ?publisher;",
             "dbp:magazine ?magazine;",
             "dbp:volumes ?numberOfVolumes.",
-            "FILTER (?uri = dbr:"+input,
+            "FILTER (regex(?uri, "+input+")",
             "&& lang(?name)=\"en\"",
             "&& lang(?description)=\"en\")",
             "}",
