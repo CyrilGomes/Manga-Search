@@ -12,6 +12,7 @@
 </body>
 
 <script>
+    $(document).ready(search)
     function search(){
         queryParams = new URLSearchParams(window.location.search);
         var input = queryParams.get("search");
