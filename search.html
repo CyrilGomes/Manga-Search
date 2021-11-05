@@ -19,7 +19,7 @@
         /*document.getElementById('search-terms').value = input;*/
         var urlSearch = "http://dbpedia.org/sparql";
         var query = ["SELECT DISTINCT ?manga WHERE { ?manga dbo:type dbr:Manga.",
-        "FILTER( regex(?manga, "+input+"))",
+        "FILTER( regex(?manga, \""+input+"\"))",
         "}",
         ].join(" ");
         /*var query = [
