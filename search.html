@@ -2,14 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Title</title>
 </head>
 <body>
-
+<button onclick="search()">Click me</button>
+<table id="displayResults">
+    </table>
 </body>
 
 <script>
-    let queryParams = new URLSearchParams(window.location.search);
-    console.log(queryParams.get("title"));
+    function search(){
+        queryParams = new URLSearchParams(window.location.search);
+        var input = queryParams.get("search");
+        /*document.getElementById('search-terms').value = input;*/
+        var urlSearch = "http://dbpedia.org/sparql";
+
+        var query = [
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+            "SELECT * WHERE {",
+            "?uri rdfs:label ?name;",
+            "rdfs:comment ?description;",
+            "dbo:firstPublicationDate ?startDate ;",
+            "dbo:author ?author;",
+            "dbo:publisher ?publisher;",
+            "dbp:magazine ?magazine;",
+            "dbp:volumes ?numberOfVolumes.",
+            "FILTER (?uri = dbr:Naruto",
+            "&& lang(?name)=\"en\"",
+            "&& lang(?description)=\"en\")",
+            "}",
+            "Limit 1"
+        ].join(" ");
+        var queryUrl = urlSearch + "?query=" + encodeURIComponent(query) + "&format=json";
+        console.log(queryUrl);
+        $.ajax({
+            dataType: "jsonp",
+            url: queryUrl,
+            success: function (data) {
+                var table = $("#displayResults");
+                console.log(data);
+                // get the sparql variables from the 'head' of the data.
+                var headerVars = data.head.vars;
+
+                // using the vars, make some table headers and add them to the table;
+                var trHeaders = getTableHeaders(headerVars);
+                table.append(trHeaders);
+
+                // grab the actual results from the data.
+                var bindings = data.results.bindings;
+
+                // for each result, make a table row and add it to the table.
+                for (rowIdx in bindings) {
+                    table.append(getTableRow(headerVars, bindings[rowIdx]));
+                }
+            }
+        });
+        function getTableRow(headerVars, rowData) {
+            var tr = $("<tr></tr>");
+
+            for (var i in headerVars) {
+                tr.append(getTableCell(headerVars[i], rowData));
+            }
+
+            return tr;
+        }
+        function getTableCell(fieldName, rowData) {
+            var td = $("<td></td>");
+            var fieldData = rowData[fieldName];
+            var arrayData = fieldData["value"].split("http://dbpedia.org/resource/")
+            var tailleArray = arrayData.length
+            var data = arrayData[tailleArray-1]
+
+
+            //alert("fieldName = ["+fieldName +"] rowData[fieldName][value] = ["+rowData[fieldName]["value"] + "]");
+            if (tailleArray === 1){
+                td.html(fieldData["value"]);
+            }
+            else{
+                td.html("<a href="+fieldData["value"]+">"+data.replace("_"," ")+"</a>");
+            }
+            return td;
+        }
+        function getTableHeaders(headerVars) {
+            var trHeaders = $("<tr></tr>");
+            for (var i in headerVars) {
+                trHeaders.append($("<th>" + headerVars[i] + "</th>"));
+            }
+            return trHeaders;
+        }
+
+    }
 </script>
 </html>
