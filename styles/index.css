@@ -1,0 +1,46 @@
+html {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    height: 100%;
+}
+
+main {
+    grid-area: main;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.description {
+    width: 50%;
+}
+
+.search {
+    width: 50%;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-template-columns: 0.9fr 0.1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+    "search-bar language"
+    "search-bt search-bt";
+}
+
+#language {
+    grid-area: language;
+}
+
+#search-bar {
+    grid-area: search-bar;
+}
+
+#search-bt {
+    grid-area: search-bt;
+}
