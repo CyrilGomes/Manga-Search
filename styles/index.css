@@ -5,6 +5,10 @@ html {
 }
 
 body {
+    background-image: url("../4243126.jpg");
+    background-attachment: fixed;
+    background-position: 0px -250px;
+    background-size: cover;
     height: 100%;
 }
 
@@ -25,7 +29,7 @@ main {
     width: 50%;
     display: grid;
     grid-auto-columns: 1fr;
-    grid-template-columns: 0.9fr 0.1fr;
+    grid-template-columns: 0.8fr 0.2fr;
     grid-template-rows: 1fr 1fr;
     gap: 0px 0px;
     grid-template-areas:
@@ -35,12 +39,19 @@ main {
 
 #language {
     grid-area: language;
+    padding: 5px;
 }
 
 #search-bar {
     grid-area: search-bar;
+    padding: 5px;
 }
 
 #search-bt {
     grid-area: search-bt;
+    padding: 5px;
+}
+
+#search-bt button {
+    width: 100%;
 }
