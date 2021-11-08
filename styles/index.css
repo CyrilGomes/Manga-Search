@@ -62,7 +62,7 @@ h1 {
 #champs-recherche-avancee {
     display: flex;
     flex-direction: column;
-    border: black solid;
+    border: #AC0E35 solid;
     border-radius: 5px 5px 5px 5px;
 }
 
