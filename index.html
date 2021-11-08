@@ -2,40 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="styles/index.css">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+    <link href="styles/index.css" rel="stylesheet" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Manga search</title>
 </head>
 
 <body>
-    <main>
-        <h1>Manga <span style="color:#AC0E35;">Search</span> </h1>
-        <div class="search">
-            <div id="search-bar">
-                <input type="text" id="search" class="form-control" placeholder="Chercher un manga par titre">
-            </div>
-            <div id="language">
-                <select class="form-control form-select" aria-label="Langue">
-                    <option value="fr" selected>Français</option>
-                    <option value="en">English</option>
-                    <option value="jp">日本語</option>
-                </select>
-            </div>
-            <div id="search-bt">
-                <button id="valider">Rechercher</button>
+<main>
+    <h1>Manga <span style="color:#AC0E35;">Search</span></h1>
+    <div class="search">
+        <div class="form-item">
+            <input class="form-control" id="name" placeholder="Chercher un manga par titre" type="text">
+        </div>
+        <div class="form-item">
+            <button id="bt-recherche-avancee" style="all: unset; cursor: pointer">
+                <span>Recherche avancée</span>
+                <img alt="image d'une flèche allant vers le bas"
+                     class="rotating-icon"
+                     id="i-recherche-avancee"
+                     src="Arrowhead-Down-256.png"
+                     style="height: 20px; width: 20px"
+                />
+            </button>
+            <div id="champs-recherche-avancee">
+                <div class="form-item">
+                    <input class="form-control" id="author" placeholder="Auteur du manga" type="text">
+                </div>
+                <div class="form-item">
+                    <input class="form-control" id="year" placeholder="Année de parution" type="date">
+                </div>
+                <div class="form-item">
+                    <textarea class="form-control" id="filter" placeholder="Filtres (1 par ligne)"
+                              type="text"></textarea>
+                </div>
             </div>
         </div>
-    </main>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var button = $('#valider');
-            var input = $('#search');
-            button.click(function() {
-                window.location.assign("search.html?search=" + input.val());
-            });
+        <div class="form-item">
+            <button id="valider">Rechercher</button>
+        </div>
+    </div>
+</main>
+<script type="text/javascript">
+    $(document).ready(function () {
+        let btSearch = $('#valider');
+        let btAdvancedSearch = $('#bt-recherche-avancee');
+        let rechercheAvancee = false;
+
+        btSearch.click(function () {
+            let name = $('#name');
+            let author = $('#author');
+            let year = $('#year');
+            let filter = $('#filter');
+            let filterText = filter.val().replace('\n', ';');
+            let queryText = "search.html?";
+            if (!(name.val() === "")) queryText += "search=" + name.val() + "&";
+            if (!(author.val() === "")) queryText += "author=" + author.val() + "&";
+            if (!(year.val() === "")) queryText += "year=" + new Date(year.val()).getFullYear() + "&";
+            if (!(filterText === "")) queryText += "filter=" + filterText + "&";
+            window.location.assign(queryText.substr(0, queryText.length - 1));
         });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        btAdvancedSearch.click(function () {
+            let iconeRecherche = $('#i-recherche-avancee');
+            if (rechercheAvancee) {
+                iconeRecherche.toggleClass('active', false);
+                $('#champs-recherche-avancee').toggleClass('active', false);
+                rechercheAvancee = false;
+            } else {
+                iconeRecherche.toggleClass('active', true);
+                $('#champs-recherche-avancee').toggleClass('active', true);
+                rechercheAvancee = true;
+            }
+        })
+    });
+</script>
+<script crossorigin="anonymous"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
