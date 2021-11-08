@@ -1,0 +1,23 @@
+#name {
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+table,
+td {
+  border: 1px solid #333;
+}
+
+th,
+td {
+  text-align: center;
+}
+thead {
+  background-color: #333;
+  color: #fff;
+}
+
+#genres {
+  text-align: left;
+}
