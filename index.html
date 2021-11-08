@@ -78,9 +78,11 @@
             let filterText = filter.val().replace('\n', ';');
             let queryText = "search.html?";
             if (!(name.val() === "")) queryText += "search=" + name.val() + "&";
-            if (!(author.val() === "")) queryText += "author=" + author.val() + "&";
-            if (!(year.val() === "")) queryText += "year=" + new Date(year.val()).getFullYear() + "&";
-            if (!(filterText === "")) queryText += "filter=" + filterText + "&";
+            if (rechercheAvancee) {
+                if (!(author.val() === "")) queryText += "author=" + author.val() + "&";
+                if (!(year.val() === "")) queryText += "year=" + new Date(year.val()).getFullYear() + "&";
+                if (!(filterText === "")) queryText += "filter=" + filterText + "&";
+            }
             window.location.assign(queryText.substr(0, queryText.length - 1));
         });
         btAdvancedSearch.click(function () {
