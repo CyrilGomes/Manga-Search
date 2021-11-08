@@ -11,7 +11,15 @@
 
 <body>
 <main>
-    <h1>Manga <span style="color:#AC0E35;">Search</span></h1>
+    <div style="display: flex; justify-content: center">
+        <iframe allowFullScreen class="giphy-embed" frameBorder="0" height="45"
+                src="https://giphy.com/embed/IcJ6n6VJNjRNS"
+                width="45"></iframe>
+        <h1 style="margin-bottom: 0; text-align-all: center">Manga <span style="color:#AC0E35;">Search</span></h1>
+        <iframe allowFullScreen class="giphy-embed" frameBorder="0" height="45"
+                src="https://giphy.com/embed/IcJ6n6VJNjRNS"
+                width="45"></iframe>
+    </div>
     <div class="search">
         <div class="form-item">
             <input class="form-control" id="name" placeholder="Chercher un manga par titre" type="text">
@@ -30,8 +38,7 @@
                 <div class="form-item">
                     <input class="form-control" id="author" placeholder="Auteur du manga" type="text">
                 </div>
-                <div class="form-item">
-                    <input class="form-control" id="year" placeholder="Année de parution" type="date">
+                <div class="form-item" id="year-container">
                 </div>
                 <div class="form-item">
                     <textarea class="form-control" id="filter" placeholder="Filtres (1 par ligne)"
@@ -46,6 +53,19 @@
 </main>
 <script type="text/javascript">
     $(document).ready(function () {
+        let newDiv = document.createElement('div');
+        let currYear = new Date().getFullYear();
+        let selectHTML = "";
+        selectHTML = "<select class='form-select' id='year'>";
+        for (i = 1970; i < currYear; i = i + 1) {
+            selectHTML += "<option value='" + i + "'>" + i + "</option>";
+        }
+        selectHTML += "<option value='" + currYear + "' selected>" + currYear + "</option>";
+        selectHTML += "</select>";
+        newDiv.innerHTML = selectHTML;
+        document.getElementById("year-container").appendChild(newDiv);
+
+
         let btSearch = $('#valider');
         let btAdvancedSearch = $('#bt-recherche-avancee');
         let rechercheAvancee = false;
