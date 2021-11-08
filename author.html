@@ -85,18 +85,11 @@
 
           const name = data.results.bindings[0].name.value;
           const description = data.results.bindings[0].descriptionAuteur.value;
-          const debut = data.results.bindings[0].debutAuteur.value;
           const dateBirth = data.results.bindings[0].birthDateAuteur.value;
           const placeBirth = data.results.bindings[0].birthPlaceAuteur.value;
           const works = data.results.bindings[0].works.value.split('|');
-          const awards = data.results.bindings[0].awards.value.split('|');
-
-          document.title = name;
-          $('#name').text(name);
-          $('#description').text(description);
-          $('#birthDate').text(dateBirth);
-          $('#birthPlace').text(placeBirth);
-          $('#debut').text(debut);
+          let debut = "unknown";
+          let awards = "no awards";
 
           let worksHtml = '<ul>';
           for (const work of works) {
@@ -105,15 +98,32 @@
             worksHtml += '</li>';
           }
           worksHtml += '</ul>';
-          $('#works').html(worksHtml);
 
-          let awardsHtml = '<ul>';
-          for (const award of awards) {
-            awardsHtml += '<li>';
-            awardsHtml += award;
-            awardsHtml += '</li>';
+          if( data.results.bindings[0].debutAuteur != undefined){
+            debut = data.results.bindings[0].debutAuteur.value;
           }
-          awardsHtml += '</ul>';
+
+          let awardsHtml = awards;
+          if(data.results.bindings[0].awards != undefined){
+            awards = data.results.bindings[0].awards.value.split("|");
+            awardsHtml = '<ul>';
+            for (const award of awards) {
+              awardsHtml += '<li>';
+              awardsHtml += formatUri(award);
+              awardsHtml += '</li>';
+            }
+            awardsHtml += '</ul>';
+          }
+
+          document.title = name;
+          $('#name').text(name);
+          $('#description').text(description);
+          $('#birthDate').text(dateBirth);
+          $('#birthPlace').text(placeBirth);
+          $('#debut').text(debut);
+
+          $('#works').html(worksHtml);
+          
           $('#awards').html(awardsHtml);
         },
       });
