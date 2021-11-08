@@ -5,10 +5,11 @@ html {
 }
 
 body {
-    background-image: url("../4243126.jpg");
-    background-attachment: fixed;
-    background-position: 0px -250px;
-    background-size: cover;
+    margin:0;
+    padding:0;
+    background: url(bg.jpg) no-repeat center fixed; 
+    -webkit-background-size: cover; /* pour anciens Chrome et Safari */
+    background-size: cover; /* version standardisée */
     height: 100%;
 }
 
@@ -21,10 +22,21 @@ main {
     justify-content: center;
 }
 
-.description {
-    width: 50%;
+@font-face {
+    font-family: japaneseFont;
+    src: url(fonts/Japanese_3017.ttf);
 }
 
+.description {
+    width: 50%;
+    
+}
+
+
+h1{
+    font-family: japaneseFont;
+    
+}
 .search {
     width: 50%;
     display: grid;

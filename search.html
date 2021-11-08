@@ -15,14 +15,37 @@
     $(document).ready(search)
     function search(){
         queryParams = new URLSearchParams(window.location.search);
-        var input = queryParams.get("search").replace(" ", "_");
+        var input = queryParams.get("search").replace(" ", "_")
+        var author = queryParams.get("author")
+        if( author != null){
+            author = author.replace(" ", "_")
+        }
+        var year = queryParams.get("year")
+        var filter = queryParams.get("filter")
+        if( filter != null){
+            filter = filter.replace(" ", "_")
+        }
+
 
         /*document.getElementById('search-terms').value = input;*/
         var urlSearch = "http://dbpedia.org/sparql";
-        var query = ["SELECT DISTINCT ?manga WHERE { ?manga dbo:type dbr:Manga.",
-        "FILTER( regex(?manga, \""+input+"\"))",
-        "}",
-        ].join(" ");
+        var query = ["SELECT DISTINCT ?manga WHERE { ?manga dbo:type dbr:Manga ;",
+            "dbo:firstPublicationDate ?startDate ;"]
+        if(author != null){
+            query.append("dbo:author ?author.")
+        }
+        query.append("FILTER( regex(?manga, \""+input+"\",\"i\") &&")
+        if (author != null){
+            query.append("regex(?author, \""+author+"\",\"i\") &&")
+        }
+        if( year != null){
+            query.append("regex(?startDate, \""+year+"\", \"i\") &&")
+        }
+        if(filter != null){
+            query.append("regex(?startDate, \"^((?!"+filter+").)*$\", \"i\")).")
+        }
+        query.append("}")
+        query.join(" ");
         /*var query = [
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
             "SELECT * WHERE {",
