@@ -94,7 +94,7 @@
           let worksHtml = '<ul>';
           for (const work of works) {
             worksHtml += '<li>';
-            worksHtml += work;
+            worksHtml += "<a href='manga.html?manga="+work.replaceAll(' ','_')+"'>"+work+"</a>";
             worksHtml += '</li>';
           }
           worksHtml += '</ul>';
