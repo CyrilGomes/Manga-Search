@@ -1,5 +1,16 @@
 const main = () => {
-  const character = window.location.search.split('=')[1];
+  const characterUnformatted = window.location.search.split('=')[1];
+
+  //Add a \ just before parenthese to have a correct query after
+  let character = '';
+  for (let i = 0; i < characterUnformatted.length; i++) {
+    if (['(', ')', '!'].includes(characterUnformatted[i])) {
+      character += '\\';
+    }
+    character += characterUnformatted[i];
+  }
+  console.log('finalCharacter', character);
+
   const urlSearch = 'http://dbpedia.org/sparql';
 
   const query = `SELECT ?uri ?name ?description ?firstAppearance GROUP_CONCAT (DISTINCT ?manga; separator="|") as ?mangas GROUP_CONCAT (DISTINCT ?voice; separator="|") as ?voiceActors WHERE { 

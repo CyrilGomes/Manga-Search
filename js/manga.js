@@ -3,6 +3,7 @@ const main = () => {
   const urlSearch = 'http://dbpedia.org/sparql';
   getBasicInfos(manga, urlSearch);
   getCharacters(manga, urlSearch);
+  getSameGenreMangas(manga, urlSearch);
 };
 
 const getBasicInfos = (manga, urlSearch) => {
@@ -11,12 +12,14 @@ const getBasicInfos = (manga, urlSearch) => {
     rdfs:comment ?description;
     dbo:firstPublicationDate ?startDate ;
     dbo:publisher ?publisher;
-    dbp:imprint ?magazine;
     dbp:volumes ?numberOfVolumes;
     dbp:genre ?genre.
     {?uri dbo:author ?author.}
     UNION
     {?uri dbo:illustrator ?author.}
+    {?uri dbp:magazine ?magazine}
+    UNION
+    {?uri dbp:imprint ?magazine}
     FILTER (?uri = dbr:${manga}
     && lang(?name)="en"
     && lang(?description)="en"
@@ -82,6 +85,41 @@ const getCharacters = (manga, urlSearch) => {
 
       charactersHtml += '</ul>';
       $('#characters').html(charactersHtml);
+    },
+  });
+};
+
+const getSameGenreMangas = (manga, urlSearch) => {
+  const query = `SELECT ?manga WHERE { 
+        ?uri dbp:genre ?genre. 
+        ?manga dbp:genre ?genre. 
+        ?manga dbo:type dbr:Manga. 
+        FILTER(?uri=dbr:${manga} && ?uri!=?manga) 
+        } LIMIT 10 `;
+
+  const queryUrl =
+    urlSearch + '?query=' + encodeURIComponent(query) + '&format=json';
+
+  $.ajax({
+    dataType: 'jsonp',
+    url: queryUrl,
+    success: (data) => {
+      const mangas = data.results.bindings.map((x) => x.manga.value);
+      console.log('mangas', mangas);
+
+      let mangasHtml = '<ul>';
+      mangas.forEach((mangaUri) => {
+        mangasHtml += '<li>';
+        mangasHtml += `<a href="manga.html?manga=${
+          mangaUri.split('resource/')[1]
+        }">`;
+        mangasHtml += formatUri(mangaUri);
+        mangasHtml += '</a>';
+        mangasHtml += '</li>';
+      });
+      mangasHtml += '</ul>';
+
+      $('#similarMangas').html(mangasHtml);
     },
   });
 };
