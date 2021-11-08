@@ -34,15 +34,15 @@
         if(author != null){
             query.append("dbo:author ?author.")
         }
-        query.append("FILTER( regex(?manga, \""+input+"\",\"i\");")
+        query.append("FILTER( regex(?manga, \""+input+"\",\"i\") &&")
         if (author != null){
-            query.append("regex(?author, \""+author+"\",\"i\");")
+            query.append("regex(?author, \""+author+"\",\"i\") &&")
         }
         if( year != null){
-            query.append("regex(?startDate, \""+year+"\", \"i\");")
+            query.append("regex(?startDate, \""+year+"\", \"i\") &&")
         }
         if(filter != null){
-            query.append("regex(?startDate, \"^((?!"+filter+").)*$\", \"i\").).")
+            query.append("regex(?startDate, \"^((?!"+filter+").)*$\", \"i\")).")
         }
         query.append("}")
         query.join(" ");
