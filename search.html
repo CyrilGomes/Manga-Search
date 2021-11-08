@@ -3,65 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/search.css">
     <title>Title</title>
 </head>
 <body>
-<button onclick="search()">Click me</button>
-<table id="displayResults">
+    <main>
+        <h1>Manga <span style="color:#AC0E35;">Search</span> </h1>
+        <div class="form-item">
+            <input class="form-control" id="name" placeholder="Chercher un manga par titre" type="text">
+        </div>
+        <div class="form-item">
+            <button id="bt-recherche-avancee" style="all: unset; cursor: pointer">
+                <span>Recherche avancée</span>
+                <img alt="image d'une flèche allant vers le bas"
+                     class="rotating-icon"
+                     id="i-recherche-avancee"
+                     src="Arrowhead-Down-256.png"
+                     style="height: 20px; width: 20px"
+                />
+            </button>
+            <div id="champs-recherche-avancee">
+                <div class="form-item">
+                    <input class="form-control" id="author" placeholder="Auteur du manga" type="text">
+                </div>
+                <div class="form-item">
+                    <input class="form-control" id="year" placeholder="Année de parution" type="date">
+                </div>
+                <div class="form-item">
+                    <textarea class="form-control" id="filter" placeholder="Filtres (1 par ligne)"
+                              type="text"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-item">
+            <button onclick="search()">Rechercher</button>
+        </div>
+    </main>
+</script>
+<table class="tableResults" id="displayResults">
     </table>
 </body>
-
 <script>
-    $(document).ready(search)
-    function search(){
-        queryParams = new URLSearchParams(window.location.search);
-        var input = queryParams.get("search").replace(" ", "_")
+    let queryParams = new URLSearchParams(window.location.search);
+    let input = queryParams.get("search")
+    if (input != null){
+        $(document).ready(searchInit)
+    }
+    function searchInit() {
         var author = queryParams.get("author")
-        if( author != null){
-            author = author.replace(" ", "_")
-        }
         var year = queryParams.get("year")
         var filter = queryParams.get("filter")
-        if( filter != null){
-            filter = filter.replace(" ", "_")
+        mainSearch(input, author, year, filter)
+    }
+    function search() {
+        var input = $('#name');
+        var author = $('#author');
+        var year = $('#year');
+        var filter = $('#filter');
+        console.log(input.val());
+        mainSearch(input.val(), author.val(), year.val(), filter.val());
+    }
+    function mainSearch(uInput, uAuthor, uYear, uFilter) {
+        $("#displayResults tr").remove();
+        $("#displayResults th").remove();
+        $("#displayResults thead").remove();
+        var input = uInput.replace(" ", "_");
+        var author = uAuthor;
+        if (author != null) {
+            author = author.replace(" ", "_");
+        }
+        var year = uYear;
+        var filter = uFilter;
+        if (filter != null) {
+            filter = filter.replace(" ", "_");
         }
 
 
         /*document.getElementById('search-terms').value = input;*/
         var urlSearch = "http://dbpedia.org/sparql";
-        var query = ["SELECT DISTINCT ?manga WHERE { ?manga dbo:type dbr:Manga ;",
-            "dbo:firstPublicationDate ?startDate ;"]
-        if(author != null){
-            query.append("dbo:author ?author.")
+        var queryArray = ["SELECT DISTINCT ?manga WHERE { ?manga dbo:type dbr:Manga ;",
+            "dbo:firstPublicationDate ?startDate "]
+        if (author !== "") {
+            queryArray.push("; dbo:author ?author");
         }
-        query.append("FILTER( regex(?manga, \""+input+"\",\"i\") &&")
-        if (author != null){
-            query.append("regex(?author, \""+author+"\",\"i\") &&")
+        queryArray.push(". FILTER( regex(?manga, \"" + input + "\",\"i\")");
+        if (author !== "") {
+            queryArray.push("&& regex(?author, \"" + author + "\",\"i\")");
         }
-        if( year != null){
-            query.append("regex(?startDate, \""+year+"\", \"i\") &&")
+        if (year !== "") {
+            queryArray.push("&& regex(?startDate, \"" + year + "\", \"i\")");
         }
-        if(filter != null){
-            query.append("regex(?startDate, \"^((?!"+filter+").)*$\", \"i\")).")
+        if (filter !== "") {
+            queryArray.push("&& regex(?startDate, \"^((?!" + filter + ").)*$\", \"i\")");
         }
-        query.append("}")
-        query.join(" ");
-        /*var query = [
-            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-            "SELECT * WHERE {",
-            "?uri rdfs:label ?name;",
-            "rdfs:comment ?description;",
-            "dbo:firstPublicationDate ?startDate ;",
-            "dbo:author ?author;",
-            "dbo:publisher ?publisher;",
-            "dbp:magazine ?magazine;",
-            "dbp:volumes ?numberOfVolumes.",
-            "FILTER (?uri = dbr:"+input,
-            "&& lang(?name)=\"en\"",
-            "&& lang(?description)=\"en\")",
-            "}",
-            "Limit 1"
-        ].join(" ");*/
+        queryArray.push(") }");
+        var query = queryArray.join(" ");
+
         var queryUrl = urlSearch + "?query=" + encodeURIComponent(query) + "&format=json";
         console.log(queryUrl);
         $.ajax({
@@ -86,40 +123,40 @@
                 }
             }
         });
-        function getTableRow(headerVars, rowData) {
-            var tr = $("<tr></tr>");
-
-            for (var i in headerVars) {
-                tr.append(getTableCell(headerVars[i], rowData));
-            }
-
-            return tr;
-        }
-        function getTableCell(fieldName, rowData) {
-            var td = $("<td></td>");
-            var fieldData = rowData[fieldName];
-            var arrayData = fieldData["value"].split("http://dbpedia.org/resource/")
-            var tailleArray = arrayData.length
-            var data = arrayData[tailleArray-1]
-
-
-            //alert("fieldName = ["+fieldName +"] rowData[fieldName][value] = ["+rowData[fieldName]["value"] + "]");
-            if (tailleArray === 1){
-                td.html(fieldData["value"]);
-            }
-            else{
-                td.html("<a href="+fieldData["value"]+">"+data.replace("_"," ")+"</a>");
-            }
-            return td;
-        }
-        function getTableHeaders(headerVars) {
-            var trHeaders = $("<tr></tr>");
-            for (var i in headerVars) {
-                trHeaders.append($("<th>" + headerVars[i] + "</th>"));
-            }
-            return trHeaders;
-        }
-
     }
+    function getTableRow(headerVars, rowData) {
+        var tr = $("<tr></tr>");
+
+        for (var i in headerVars) {
+            tr.append(getTableCell(headerVars[i], rowData));
+        }
+
+        return tr;
+    }
+    function getTableCell(fieldName, rowData) {
+        var td = $("<td></td>");
+        var fieldData = rowData[fieldName];
+        var arrayData = fieldData["value"].split("http://dbpedia.org/resource/")
+        var tailleArray = arrayData.length
+        var data = arrayData[tailleArray-1]
+
+
+        //alert("fieldName = ["+fieldName +"] rowData[fieldName][value] = ["+rowData[fieldName]["value"] + "]");
+        if (tailleArray === 1){
+            td.html(fieldData["value"]);
+        }
+        else{
+            td.html("<a href="+fieldData["value"]+">"+data.replace("_"," ")+"</a>");
+        }
+        return td;
+    }
+    function getTableHeaders(headerVars) {
+        var trHeaders = $("<thead><tr></tr></thead>");
+        for (var i in headerVars) {
+            trHeaders.append($("<th>" + headerVars[i] + "</th>>"));
+        }
+        return trHeaders;
+    }
+
 </script>
 </html>
