@@ -43,7 +43,6 @@
 <table class="tableResults" id="displayResults">
     </table>
 </body>
-/* TODO: Rajouter le lien vers la page manga.html avec param manga, le nom du manga. */
 <script>
     let queryParams = new URLSearchParams(window.location.search);
     let input = queryParams.get("search")
@@ -65,6 +64,9 @@
         mainSearch(input.val(), author.val(), year.val(), filter.val());
     }
     function mainSearch(uInput, uAuthor, uYear, uFilter) {
+        $("#displayResults tr").remove();
+        $("#displayResults th").remove();
+        $("#displayResults thead").remove();
         var input = uInput.replace(" ", "_");
         var author = uAuthor;
         if (author != null) {
@@ -80,21 +82,21 @@
         /*document.getElementById('search-terms').value = input;*/
         var urlSearch = "http://dbpedia.org/sparql";
         var queryArray = ["SELECT DISTINCT ?manga WHERE { ?manga dbo:type dbr:Manga ;",
-            "dbo:firstPublicationDate ?startDate ;"]
-        if (author != null) {
-            queryArray.push("dbo:author ?author. ");
+            "dbo:firstPublicationDate ?startDate "]
+        if (author !== "") {
+            queryArray.push("; dbo:author ?author");
         }
-        queryArray.push("FILTER( regex(?manga, \"" + input + "\",\"i\") &&");
-        if (author != null) {
-            queryArray.push("regex(?author, \"" + author + "\",\"i\") &&");
+        queryArray.push(". FILTER( regex(?manga, \"" + input + "\",\"i\")");
+        if (author !== "") {
+            queryArray.push("&& regex(?author, \"" + author + "\",\"i\")");
         }
-        if (year != null) {
-            queryArray.push("regex(?startDate, \"" + year + "\", \"i\") &&");
+        if (year !== "") {
+            queryArray.push("&& regex(?startDate, \"" + year + "\", \"i\")");
         }
-        if (filter != null) {
-            queryArray.push("regex(?startDate, \"^((?!" + filter + ").)*$\", \"i\")).");
+        if (filter !== "") {
+            queryArray.push("&& regex(?startDate, \"^((?!" + filter + ").)*$\", \"i\")");
         }
-        queryArray.push("}");
+        queryArray.push(") }");
         var query = queryArray.join(" ");
 
         var queryUrl = urlSearch + "?query=" + encodeURIComponent(query) + "&format=json";
@@ -149,9 +151,9 @@
         return td;
     }
     function getTableHeaders(headerVars) {
-        var trHeaders = $("<tr></tr>");
+        var trHeaders = $("<thead><tr></tr></thead>");
         for (var i in headerVars) {
-            trHeaders.append($("<th>" + headerVars[i] + "</th>"));
+            trHeaders.append($("<th>" + headerVars[i] + "</th>>"));
         }
         return trHeaders;
     }
