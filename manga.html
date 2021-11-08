@@ -16,13 +16,16 @@
   <body>
     <h1 id="name"></h1>
 
-    <div>
+    <div class="content">
+      <h3>Description</h3>
       <p id="description"></p>
     </div>
 
-    <div>
-      Author:
-      <p id="author"></p>
+    <div class="content">
+      <h3>
+        Author:
+        <span id="author"></span>
+      </h3>
     </div>
 
     <table>
@@ -43,73 +46,12 @@
         <td id="genres"></td>
       </tbody>
     </table>
+
+    <div class="content">
+      <h3>Characters</h3>
+      <div id="characters"></div>
+    </div>
   </body>
 
-  <script>
-    $(document).ready(() => {
-      const manga = window.location.search.split('=')[1];
-      const urlSearch = 'http://dbpedia.org/sparql';
-
-      const query = `SELECT ?name ?description ?startDate ?author ?publisher ?magazine ?numberOfVolumes GROUP_CONCAT(DISTINCT ?genre; separator="|") as ?genres WHERE {
-    ?uri rdfs:label ?name ;
-    rdfs:comment ?description;
-    dbo:firstPublicationDate ?startDate ;
-    dbo:author ?author;
-    dbo:publisher ?publisher;
-    dbp:magazine ?magazine;
-    dbp:volumes ?numberOfVolumes;
-    dbp:genre ?genre.
-    FILTER (?uri = dbr:${manga}
-    && lang(?name)="en"
-    && lang(?description)="en"
-    )
-    }`;
-
-      const queryUrl =
-        urlSearch + '?query=' + encodeURIComponent(query) + '&format=json';
-      console.log(queryUrl);
-
-      $.ajax({
-        dataType: 'jsonp',
-        url: queryUrl,
-        success: (data) => {
-          console.log(data);
-
-          const name = data.results.bindings[0].name.value;
-          const description = data.results.bindings[0].description.value;
-          const startDate = data.results.bindings[0].startDate.value;
-          const author = data.results.bindings[0].author.value;
-          const publisher = data.results.bindings[0].publisher.value;
-          const magazine = data.results.bindings[0].magazine.value;
-          const numberOfVolumes =
-            data.results.bindings[0].numberOfVolumes.value;
-          const genres = data.results.bindings[0].genres.value.split('|');
-
-          document.title = name;
-          $('#name').text(name);
-          $('#description').text(description);
-          $('#author').text(formatUri(author));
-          $('#numberOfVolumes').text(numberOfVolumes);
-          $('#startDate').text(startDate);
-          $('#publisher').text(formatUri(publisher));
-          $('#magazine').text(formatUri(magazine));
-
-          console.log('genres', genres);
-
-          let genreHtml = '<ul>';
-          for (const genre of genres) {
-            genreHtml += '<li>';
-            genreHtml += formatUri(genre);
-            genreHtml += '</li>';
-          }
-          genreHtml += '</ul>';
-          $('#genres').html(genreHtml);
-        },
-      });
-    });
-
-    const formatUri = (uri) => {
-      return uri.split('resource/')[1].replaceAll('_', ' ');
-    };
-  </script>
+  <script src="js/manga.js"></script>
 </html>
