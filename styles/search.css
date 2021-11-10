@@ -1,0 +1,141 @@
+html {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+body {
+    margin:0;
+    padding:0;
+    height: 100%;
+}
+@font-face {
+    font-family: japaneseFont;
+    src: url(fonts/Japanese_3017.ttf);
+}
+h1 {
+    font-family: japaneseFont;
+}
+
+table.tableResults {
+    border: 2px solid #AC0E35;
+    background-color: #EEE7DB;
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+table.tableResults td, table.tableResults th {
+    border: 1px solid #AC809B;
+    padding: 3px 2px;
+}
+table.tableResults tbody td {
+    font-size: 13px;
+}
+table.tableResults tr:nth-child(even) {
+    background: #E59494;
+}
+table.tableResults td .links a{
+    display: inline-block;
+    background: #FFFFFF;
+    color: #AC0E35;
+}
+
+table.tableResults thead {
+    background: #AC0E35;
+}
+table.tableResults thead th {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    border-left: 2px solid #AC0E35;
+}
+table.tableResults thead th:first-child {
+    border-left: none;
+}
+
+table.tableResults tfoot {
+    font-size: 13px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background: #AC0E35;
+}
+table.tableResults tfoot td {
+    font-size: 13px;
+}
+table.tableResults tfoot .links {
+    text-align: right;
+}
+table.tableResults tfoot .links a{
+    display: inline-block;
+    background: #FFFFFF;
+    color: #AC0E35;
+    padding: 2px 8px;
+    border-radius: 5px;
+}
+.search {
+    width: 50%;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-template-columns: 0.8fr 0.2fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+    "search-bar language"
+    "search-bt search-bt";
+}
+
+#language {
+    grid-area: language;
+    padding: 5px;
+}
+
+#search-bar {
+    grid-area: search-bar;
+    padding: 5px;
+}
+
+#search-bt {
+    grid-area: search-bt;
+    padding: 5px;
+}
+
+#search-bt button {
+    width: 100%;
+}
+.rotating-icon {
+    transform: rotate(0deg);
+    transition: transform 0.1s linear;
+}
+
+.rotating-icon.active {
+    transform: rotate(180deg);
+    transition: transform 0.1s linear;
+}
+
+#champs-recherche-avancee {
+    display: flex;
+    flex-direction: column;
+    border: #AC0E35 solid;
+    border-radius: 5px 5px 5px 5px;
+}
+
+#champs-recherche-avancee, #champs-recherche-avancee * {
+    height: 0;
+    min-height: 0;
+    opacity: 0;
+    padding: 0;
+    visibility: unset;
+}
+
+#champs-recherche-avancee.active, #champs-recherche-avancee.active * {
+    height: initial;
+    opacity: 1;
+    padding: 5px;
+    visibility: visible;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+}
