@@ -74,7 +74,7 @@
         let inputTitle = $('#name');
         let rechercheAvancee = false;
 
-        btSearch.click(function () {
+        function sendSearch() {
             let name = $('#name');
             let author = $('#author');
             let year = $('#year');
@@ -88,6 +88,16 @@
                 if (!(filterText === "")) queryText += "filter=" + filterText + "&";
             }
             window.location.assign(queryText.substr(0, queryText.length - 1));
+        }
+
+        btSearch.click(function () {
+            sendSearch();
+        });
+
+        inputTitle.on('keydown', function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                sendSearch();
+            }
         });
 
         btAdvancedSearch.click(function () {
