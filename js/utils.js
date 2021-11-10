@@ -29,9 +29,9 @@ async function getWikipediaThumbnail(resourceName) {
   });
 
   try {
-    return $("<img src="+data["query"]["pages"][0]["original"]["source"]+"></img>");
+    return $("<img alt='Image not found' src="+data["query"]["pages"][0]["original"]["source"]+"></img>");
   } catch (error) {
-    return $("<img src=''></img>");
+    return $("<img src='' alt='Image not found'></img>");
   }
   
 }

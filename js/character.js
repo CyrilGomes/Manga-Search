@@ -1,4 +1,4 @@
-const main = () => {
+const main = async () => {
   const characterUnformatted = window.location.search.split('=')[1];
 
   //Add a \ just before parenthese to have a correct query after
@@ -73,6 +73,9 @@ const main = () => {
       $('#mangas').html(mangasHtml);
     },
   });
+
+  const img = await getWikipediaThumbnail(character);
+  $('#image').html(img);
 };
 
 // launching the script when the document is ready
