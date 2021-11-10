@@ -89,12 +89,3 @@ $(document).ready(() => {
       },
     });
   });
-
-  const formatUri = (uri) => {
-    if(uri.split('resource/')[1] != undefined){
-      return uri.split('resource/')[1].replaceAll('_', ' ');
-    }else{
-      return uri;
-    }
-    
-  };

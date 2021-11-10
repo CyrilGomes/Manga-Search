@@ -173,25 +173,5 @@ const getSameGenreMangas = (manga, urlSearch) => {
   });
 };
 
-const formatUri = (uri) => {
-  if (uri.split('resource/')[1] != undefined) {
-    return uri.split('resource/')[1].replaceAll('_', ' ');
-  } else {
-    return uri;
-  }
-};
-
-const arrayToHtml = (array) => {
-  let html = '<ul>';
-  for (const uri of array) {
-    html += '<li>';
-    html += formatUri(uri);
-    html += '</li>';
-  }
-  html += '</ul>';
-
-  return html;
-};
-
 // launching the script when the document is ready
 $(document).ready(main);
