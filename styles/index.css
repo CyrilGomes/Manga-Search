@@ -46,7 +46,21 @@ h1 {
 }
 
 #valider {
+    all: unset;
+    background-color: #AC0E35;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    min-height: 50px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
     width: 100%;
+    cursor: pointer;
+}
+
+#valider > * {
+    margin: 5px;
 }
 
 .rotating-icon {
