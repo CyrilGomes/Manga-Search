@@ -43,7 +43,20 @@ const main = () => {
       $('#name').text(name);
       $('#description').text(description);
       $('#firstAppearance').text(firstAppearance);
-      $('#voiceActors').html(arrayToHtml(voiceActors));
+
+      let vaHtml = '<ul>';
+      voiceActors.forEach((voiceActURI) => {
+        vaHtml += '<li>';
+        vaHtml += `<a href="voice_actor.html?va=${
+          voiceActURI.split('resource/')[1]
+        }">`;
+        vaHtml += formatUri(voiceActURI);
+        vaHtml += '</a>';
+        vaHtml += '</li>';
+      });
+      vaHtml += '</ul>';
+
+      $('#voiceActors').html(vaHtml);
 
       let mangasHtml = '<ul>';
       mangas.forEach((mangaUri) => {
