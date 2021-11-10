@@ -130,7 +130,12 @@
     });
 
     const formatUri = (uri) => {
-      return uri.split('resource/')[1].replaceAll('_', ' ');
+      if(uri.split('resource/')[1] != undefined){
+        return uri.split('resource/')[1].replaceAll('_', ' ');
+      }else{
+        return uri;
+      }
+      
     };
   </script>
 </html>

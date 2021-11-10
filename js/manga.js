@@ -11,16 +11,20 @@ const getBasicInfos = (manga, urlSearch) => {
     ?uri rdfs:label ?name ;
     rdfs:comment ?description;
     dbo:firstPublicationDate ?startDate ;
-    dbo:publisher ?publisher;
-    dbp:volumes ?numberOfVolumes;
-    dbp:genre ?genre.
+    dbo:publisher ?publisher.
+    {?uri dbp:volumes ?numberOfVolumes.}
+    UNION
+    {?uri dbo:numberOfVolumes ?numberOfVolumes.}
+    OPTIONAL{?uri dbp:genre ?genre.}
     {?uri dbo:author ?author.}
     UNION
     {?uri dbo:illustrator ?author.}
+    UNION
+    {?uri dbp:author ?author.}
     {?uri dbp:magazine ?magazine}
     UNION
     {?uri dbp:imprint ?magazine}
-    FILTER (?uri = dbr:${manga}
+    FILTER (?uri = dbr:Undefeated_Bahamut_Chronicle
     && lang(?name)="en"
     && lang(?description)="en"
     )
@@ -42,17 +46,25 @@ const getBasicInfos = (manga, urlSearch) => {
       const publisher = data.results.bindings[0].publisher.value;
       const magazine = data.results.bindings[0].magazine.value;
       const numberOfVolumes = data.results.bindings[0].numberOfVolumes.value;
-      const genres = data.results.bindings[0].genres.value.split('|');
+
+      var genres = "non renseigné";
+      if(data.results.bindings[0].genres != undefined){
+        genres = data.results.bindings[0].genres.value.split('|');
+      }
+      
 
       document.title = name;
       $('#name').text(name);
       $('#description').text(description);
-      $('#author').text(formatUri(author));
+      $('#author').html("<a href='author.html?author="+author.split('resource/')[1]+"'>"+formatUri(author)+"</a>");
       $('#numberOfVolumes').text(numberOfVolumes);
       $('#startDate').text(startDate);
       $('#publisher').text(formatUri(publisher));
       $('#magazine').text(formatUri(magazine));
+      
       $('#genres').html(arrayToHtml(genres));
+      
+      
     },
   });
 };
@@ -125,7 +137,12 @@ const getSameGenreMangas = (manga, urlSearch) => {
 };
 
 const formatUri = (uri) => {
-  return uri.split('resource/')[1].replaceAll('_', ' ');
+  if(uri.split('resource/')[1] != undefined){
+    return uri.split('resource/')[1].replaceAll('_', ' ');
+  }else{
+    return uri;
+  }
+  
 };
 
 const arrayToHtml = (array) => {
