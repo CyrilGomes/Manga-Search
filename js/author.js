@@ -26,7 +26,7 @@ $(document).ready(() => {
                     {?uri dbo:knownFor ?work.}
                     OPTIONAL{?uri dbp:yearsActive ?debut .} 
                     OPTIONAL{?uri dbp:awards ?award.} 
-                    FILTER(?uri = dbr:Masashi_Kishimoto
+                    FILTER(?uri = dbr:${author}
                       && lang(?description)="en" 
                       && lang(?name)="en" 
                     ) 
