@@ -17,8 +17,8 @@ const main = () => {
     ?uri rdfs:label ?name; 
     rdfs:comment ?description; 
     dbo:firstAppearance ?firstAppearance; 
-    dbo:series ?manga;
-    dbo:voice ?voice. 
+    dbo:series ?manga.
+    OPTIONAL{?uri dbo:voice ?voice. }
     FILTER(?uri=dbr:${character}
     && lang(?name)="en" 
     && lang(?description)="en" 
@@ -63,7 +63,11 @@ const main = () => {
 };
 
 const formatUri = (uri) => {
-  return uri.split('resource/')[1].replaceAll('_', ' ');
+  if(uri.split('resource/')[1] != undefined){
+    return uri.split('resource/')[1].replaceAll('_', ' ');
+  }else{
+    return uri;
+  }
 };
 
 const arrayToHtml = (array) => {
