@@ -3,29 +3,34 @@ $(document).ready(() => {
     const urlSearch = 'http://dbpedia.org/sparql';
 
     const query = `SELECT DISTINCT ?name 
-                (SAMPLE(?description) as ?descriptionAuteur)  
-                (SAMPLE(?birthDate) as ?birthDateAuteur) 
-                (SAMPLE(?birthPlace) as ?birthPlaceAuteur) 
-                (SAMPLE(?debut) as ?debutAuteur)  
-                (SAMPLE(?uri) as ?uriAuteur)  
-                GROUP_CONCAT(DISTINCT ?work; separator="|") as ?works  
-                GROUP_CONCAT(DISTINCT ?award; separator="|") as ?awards WHERE { 
-                  ?uri  rdfs:label ?name; 
-                  a foaf:Person; 
-                  rdfs:comment ?description; 
-                  dbp:birthDate ?birthDate; 
-                  dbp:birthPlace ?birthPlace. 
-                  {?uri dbp:notableWorks ?work.} 
-                  UNION 
-                  {?uri dbp:notableworks ?work.} 
-                  OPTIONAL{?uri dbp:yearsActive ?debut .} 
-                  OPTIONAL{?uri dbp:awards ?award.} 
-                  FILTER(?uri = dbr:${author}
-                    && lang(?description)="en" 
-                    && lang(?name)="en" 
-                    && lang(?work)="en" 
-                  ) 
-                }  `;
+                  (SAMPLE(?description) as ?descriptionAuteur)  
+                  (SAMPLE(?birthDate) as ?birthDateAuteur) 
+                  (SAMPLE(?birthPlace) as ?birthPlaceAuteur) 
+                  (SAMPLE(?debut) as ?debutAuteur)  
+                  (SAMPLE(?uri) as ?uriAuteur)  
+                  GROUP_CONCAT(DISTINCT ?work; separator="|") as ?works  
+                  GROUP_CONCAT(DISTINCT ?award; separator="|") as ?awards WHERE { 
+                    ?uri  rdfs:label ?name; 
+                    a foaf:Person; 
+                    rdfs:comment ?description. 
+                    {?uri dbp:birthDate ?birthDate.}
+                    UNION
+                    {?uri dbo:birthDate ?birthDate.} 
+                    {?uri dbp:birthPlace ?birthPlace.}
+                    UNION
+                    {?uri dbo:birthPlace ?birthPlace.} 
+                    {?uri dbp:notableWorks ?work.} 
+                    UNION 
+                    {?uri dbp:notableworks ?work.}
+                    UNION
+                    {?uri dbo:knownFor ?work.}
+                    OPTIONAL{?uri dbp:yearsActive ?debut .} 
+                    OPTIONAL{?uri dbp:awards ?award.} 
+                    FILTER(?uri = dbr:Masashi_Kishimoto
+                      && lang(?description)="en" 
+                      && lang(?name)="en" 
+                    ) 
+                  }  `;
 
     const queryUrl =
       urlSearch + '?query=' + encodeURIComponent(query) + '&format=json';
@@ -47,8 +52,9 @@ $(document).ready(() => {
 
         let worksHtml = '<ul>';
         for (const work of works) {
+          let workForm = formatUri(work);
           worksHtml += '<li>';
-          worksHtml += "<a href='manga.html?manga="+work.replaceAll(' ','_')+"'>"+work+"</a>";
+          worksHtml += "<a href='manga.html?manga="+workForm.replaceAll(' ','_')+"'>"+formatUri(workForm)+"</a>";
           worksHtml += '</li>';
         }
         worksHtml += '</ul>';
