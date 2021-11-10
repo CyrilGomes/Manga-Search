@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlFormInputWithoutLabel, JSUnresolvedVariable -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,11 +13,11 @@
 <body>
 <main>
     <div style="display: flex; justify-content: center">
-        <iframe allowFullScreen class="giphy-embed" frameBorder="0" height="45"
+        <iframe allowFullScreen class="giphy-embed" height="45"
                 src="https://giphy.com/embed/IcJ6n6VJNjRNS"
                 width="45"></iframe>
         <h1 style="margin-bottom: 0; text-align-all: center">Manga <span style="color:#AC0E35;">Search</span></h1>
-        <iframe allowFullScreen class="giphy-embed" frameBorder="0" height="45"
+        <iframe allowFullScreen class="giphy-embed" height="45"
                 src="https://giphy.com/embed/IcJ6n6VJNjRNS"
                 width="45"></iframe>
     </div>
@@ -58,9 +59,8 @@
     $(document).ready(function () {
         let newDiv = document.createElement('div');
         let currYear = new Date().getFullYear();
-        let selectHTML = "";
-        selectHTML = "<select class='form-select' id='year'>";
-        for (i = 1970; i < currYear; i = i + 1) {
+        let selectHTML = "<select class='form-select' id='year'>";
+        for (let i = 1970; i < currYear; i = i + 1) {
             selectHTML += "<option value='" + i + "'>" + i + "</option>";
         }
         selectHTML += "<option value='" + currYear + "' selected>" + currYear + "</option>";
@@ -106,13 +106,14 @@
         inputTitle.on('input', function () {
             let inputText = $(this).val().replaceAll(" ", "_");
             let contenu_requete = "SELECT DISTINCT ?manga WHERE {?manga dbo:type dbr:Manga. FILTER(regex(?manga, \"" + inputText + "\",\"i\"))} LIMIT 20";
-            let url = "http://dbpedia.org/sparql?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+            let url = "https://dbpedia.org/sparql?query=" + encodeURIComponent(contenu_requete) + "&format=json";
             $('#titles')[0].innerHTML = "";
             $.ajax({
                 dataType: "jsonp",
                 url: url,
                 success: function (data) {
                     data.results.bindings.forEach(manga => {
+                        console.log(manga.manga.value);
                         let filteredTitle = manga.manga.value.replaceAll('_', ' ').replace("http://dbpedia.org/resource/", "");
                         $('#titles').append(`<option value="${filteredTitle}"/>`);
                     });
