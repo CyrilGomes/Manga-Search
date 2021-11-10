@@ -22,7 +22,10 @@
     </div>
     <div class="search">
         <div class="form-item">
-            <input class="form-control" id="name" placeholder="Chercher un manga par titre" type="text">
+            <input autocomplete="on" class="form-control" id="name" list="titles"
+                   placeholder="Chercher un manga par titre"
+                   type="search">
+            <datalist id="titles"></datalist>
         </div>
         <div class="form-item">
             <button id="bt-recherche-avancee" style="all: unset; cursor: pointer">
@@ -68,6 +71,7 @@
 
         let btSearch = $('#valider');
         let btAdvancedSearch = $('#bt-recherche-avancee');
+        let inputTitle = $('#name');
         let rechercheAvancee = false;
 
         btSearch.click(function () {
@@ -85,6 +89,7 @@
             }
             window.location.assign(queryText.substr(0, queryText.length - 1));
         });
+
         btAdvancedSearch.click(function () {
             let iconeRecherche = $('#i-recherche-avancee');
             if (rechercheAvancee) {
@@ -96,6 +101,23 @@
                 $('#champs-recherche-avancee').toggleClass('active', true);
                 rechercheAvancee = true;
             }
+        })
+
+        inputTitle.on('input', function () {
+            let inputText = $(this).val().replaceAll(" ", "_");
+            let contenu_requete = "SELECT DISTINCT ?manga WHERE {?manga dbo:type dbr:Manga. FILTER(regex(?manga, \"" + inputText + "\",\"i\"))} LIMIT 20";
+            let url = "http://dbpedia.org/sparql?query=" + encodeURIComponent(contenu_requete) + "&format=json";
+            $('#titles')[0].innerHTML = "";
+            $.ajax({
+                dataType: "jsonp",
+                url: url,
+                success: function (data) {
+                    data.results.bindings.forEach(manga => {
+                        let filteredTitle = manga.manga.value.replaceAll('_', ' ').replace("http://dbpedia.org/resource/", "");
+                        $('#titles').append(`<option value="${filteredTitle}"/>`);
+                    });
+                }
+            });
         })
     });
 </script>
