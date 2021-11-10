@@ -24,6 +24,7 @@ $(document).ready(() => {
                     {?uri dbp:notableworks ?work.}
                     UNION
                     {?uri dbo:knownFor ?work.}
+                    ?work dbo:type dbr:Manga.
                     OPTIONAL{?uri dbp:yearsActive ?debut .} 
                     OPTIONAL{?uri dbp:awards ?award.} 
                     FILTER(?uri = dbr:${author}

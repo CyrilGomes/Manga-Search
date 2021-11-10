@@ -15,7 +15,7 @@ const main = async () => {
   getCharacters(manga, urlSearch);
   getSameGenreMangas(manga, urlSearch);
 
-  if (manga !== 'Naruto' && manga !== 'One_Piece') {
+  if (manga !== 'Naruto' && manga !== 'One_Piece' && manga!=="Boruto:_Naruto_Next_Generations") {
     const img = await getWikipediaThumbnail(manga);
     $('#image').html(img);
   }
