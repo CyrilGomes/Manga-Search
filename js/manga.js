@@ -1,5 +1,15 @@
 const main = () => {
-  const manga = window.location.search.split('=')[1];
+  const mangaUnformatted = window.location.search.split('=')[1];
+
+  //Add a \ just before special characters like () or ' to have a correct SPARQL query
+  let manga = '';
+  for (let i = 0; i < mangaUnformatted.length; i++) {
+    if (['(', ')', '!'].includes(mangaUnformatted[i])) {
+      manga += '\\';
+    }
+    manga += mangaUnformatted[i];
+  }
+  console.log('finalManga', manga);
   const urlSearch = 'http://dbpedia.org/sparql';
   getBasicInfos(manga, urlSearch);
   getCharacters(manga, urlSearch);
@@ -9,21 +19,35 @@ const main = () => {
 const getBasicInfos = (manga, urlSearch) => {
   const query = `SELECT ?name ?description ?startDate ?author ?publisher ?magazine ?numberOfVolumes GROUP_CONCAT(DISTINCT ?genre; separator="|") as ?genres WHERE {
     ?uri rdfs:label ?name ;
-    rdfs:comment ?description;
-    dbo:firstPublicationDate ?startDate ;
-    dbo:publisher ?publisher.
+    rdfs:comment ?description.
+    {?uri dbo:publisher ?publisher.}
+    UNION
+    {?uri dbp:publisher ?publisher.}
+
+    {?uri dbo:firstPublicationDate ?startDate.}
+    UNION
+    {?uri dbp:first ?startDate.}
+
     {?uri dbp:volumes ?numberOfVolumes.}
     UNION
     {?uri dbo:numberOfVolumes ?numberOfVolumes.}
+    UNION
+    {?uri dbp:volumenumber ?numberOfVolumes.}
+
     OPTIONAL{?uri dbp:genre ?genre.}
+
     {?uri dbo:author ?author.}
     UNION
     {?uri dbo:illustrator ?author.}
     UNION
     {?uri dbp:author ?author.}
-    {?uri dbp:magazine ?magazine}
+
+    OPTIONAL {
+    {?uri dbp:magazine ?magazine.}
     UNION
-    {?uri dbp:imprint ?magazine}
+    {?uri dbp:imprint ?magazine.}
+    }
+    
     FILTER (?uri = dbr:${manga}
     && lang(?name)="en"
     && lang(?description)="en"
@@ -44,7 +68,7 @@ const getBasicInfos = (manga, urlSearch) => {
       const startDate = data.results.bindings[0].startDate.value;
       const author = data.results.bindings[0].author.value;
       const publisher = data.results.bindings[0].publisher.value;
-      const magazine = data.results.bindings[0].magazine.value;
+      const magazine = data.results.bindings[0]?.magazine?.value || 'Not found';
       const numberOfVolumes = data.results.bindings[0].numberOfVolumes.value;
 
       var genres = 'non renseigné';
