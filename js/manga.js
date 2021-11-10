@@ -56,7 +56,11 @@ const getBasicInfos = (manga, urlSearch) => {
       document.title = name;
       $('#name').text(name);
       $('#description').text(description);
-      $('#author').html("<a href='author.html?author="+author.split('resource/')[1]+"'>"+formatUri(author)+"</a>");
+      if(author.split('resource/')[1] != undefined){
+        $('#author').html("<a href='author.html?author="+author.split('resource/')[1]+"'>"+formatUri(author)+"</a>");
+      }else{
+        $('#author').text(formatUri(author));
+      }
       $('#numberOfVolumes').text(numberOfVolumes);
       $('#startDate').text(startDate);
       $('#publisher').text(formatUri(publisher));
