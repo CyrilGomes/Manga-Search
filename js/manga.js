@@ -1,4 +1,11 @@
 const main = async () => {
+  
+  // Hides the loading and displays content after 2 secs
+  setTimeout(()=>{
+    $('#loader').remove();
+    $('#main').css('display','block');
+  },2000);
+
   const mangaUnformatted = window.location.search.split('=')[1];
 
   //Add a \ just before special characters like () or ' to have a correct SPARQL query

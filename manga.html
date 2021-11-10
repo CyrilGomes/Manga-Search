@@ -15,52 +15,58 @@
 
   <body>
     <a href="index.html">retour à l'accueil</a>
-    <div class="container">
-      <h1 id="name"></h1>
 
-      <div id="image"></div>
-    </div>
+    <div class="loader" id="loader"></div>
 
-    <div class="content">
-      <h3>Description</h3>
-      <p id="description"></p>
-    </div>
+    <div id="main">
+      <div class="container">
+        <h1 id="name"></h1>
 
-    <div class="content">
-      <h3>
-        Author:
-        <span id="author"></span>
-      </h3>
-    </div>
+        <div id="image"></div>
+      </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Number of volumes</th>
-          <th>Date of first volume</th>
-          <th>Publisher</th>
-          <th>Magazine</th>
-          <th>Genres</th>
-        </tr>
-      </thead>
-      <tbody>
-        <td id="numberOfVolumes"></td>
-        <td id="startDate"></td>
-        <td id="publisher"></td>
-        <td id="magazine"></td>
-        <td id="genres"></td>
-      </tbody>
-    </table>
+      <div class="content">
+        <h3>Description</h3>
+        <p id="description"></p>
+      </div>
 
-    <div class="content">
-      <h3>Characters</h3>
-      <div id="characters"></div>
-    </div>
+      <div class="content">
+        <h3>
+          Author:
+          <span id="author"></span>
+        </h3>
+      </div>
 
-    <div class="content">
-      <h3>Similar mangas (Mangas in the same genre)</h3>
-      <div id="similarMangas"></div>
-    </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Number of volumes</th>
+            <th>Date of first volume</th>
+            <th>Publisher</th>
+            <th>Magazine</th>
+            <th>Genres</th>
+          </tr>
+        </thead>
+        <tbody>
+          <td id="numberOfVolumes"></td>
+          <td id="startDate"></td>
+          <td id="publisher"></td>
+          <td id="magazine"></td>
+          <td id="genres"></td>
+        </tbody>
+      </table>
+
+      <div class="content">
+        <h3>Characters</h3>
+        <div id="characters"></div>
+      </div>
+
+      <div class="content">
+        <h3>Similar mangas (Mangas in the same genre)</h3>
+        <div id="similarMangas"></div>
+      </div>
+  </div>
+
   </body>
 
   <script src="js/utils.js"></script>
