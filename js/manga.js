@@ -24,7 +24,7 @@ const getBasicInfos = (manga, urlSearch) => {
     {?uri dbp:magazine ?magazine}
     UNION
     {?uri dbp:imprint ?magazine}
-    FILTER (?uri = dbr:Undefeated_Bahamut_Chronicle
+    FILTER (?uri = dbr:${manga}
     && lang(?name)="en"
     && lang(?description)="en"
     )
@@ -47,24 +47,27 @@ const getBasicInfos = (manga, urlSearch) => {
       const magazine = data.results.bindings[0].magazine.value;
       const numberOfVolumes = data.results.bindings[0].numberOfVolumes.value;
 
-      var genres = "non renseigné";
-      if(data.results.bindings[0].genres != undefined){
+      var genres = 'non renseigné';
+      if (data.results.bindings[0].genres != undefined) {
         genres = data.results.bindings[0].genres.value.split('|');
       }
-      
 
       document.title = name;
       $('#name').text(name);
       $('#description').text(description);
-      $('#author').html("<a href='author.html?author="+author.split('resource/')[1]+"'>"+formatUri(author)+"</a>");
+      $('#author').html(
+        "<a href='author.html?author=" +
+          author.split('resource/')[1] +
+          "'>" +
+          formatUri(author) +
+          '</a>'
+      );
       $('#numberOfVolumes').text(numberOfVolumes);
       $('#startDate').text(startDate);
       $('#publisher').text(formatUri(publisher));
       $('#magazine').text(formatUri(magazine));
-      
+
       $('#genres').html(arrayToHtml(genres));
-      
-      
     },
   });
 };
@@ -83,20 +86,23 @@ const getCharacters = (manga, urlSearch) => {
     success: (data) => {
       const characters = data.results.bindings.map((x) => x.characters.value);
       console.log('characters data', characters);
+      if (characters.length === 0) {
+        $('#characters').text('No characters found for this manga in DBpedia.');
+      } else {
+        let charactersHtml = '<ul>';
+        characters.forEach((characterUri) => {
+          charactersHtml += '<li>';
+          charactersHtml += `<a href="character.html?character=${
+            characterUri.split('resource/')[1]
+          }">`;
+          charactersHtml += formatUri(characterUri);
+          charactersHtml += '</a>';
+          charactersHtml += '</li>';
+        });
 
-      let charactersHtml = '<ul>';
-      characters.forEach((characterUri) => {
-        charactersHtml += '<li>';
-        charactersHtml += `<a href="character.html?character=${
-          characterUri.split('resource/')[1]
-        }">`;
-        charactersHtml += formatUri(characterUri);
-        charactersHtml += '</a>';
-        charactersHtml += '</li>';
-      });
-
-      charactersHtml += '</ul>';
-      $('#characters').html(charactersHtml);
+        charactersHtml += '</ul>';
+        $('#characters').html(charactersHtml);
+      }
     },
   });
 };
@@ -137,12 +143,11 @@ const getSameGenreMangas = (manga, urlSearch) => {
 };
 
 const formatUri = (uri) => {
-  if(uri.split('resource/')[1] != undefined){
+  if (uri.split('resource/')[1] != undefined) {
     return uri.split('resource/')[1].replaceAll('_', ' ');
-  }else{
+  } else {
     return uri;
   }
-  
 };
 
 const arrayToHtml = (array) => {
