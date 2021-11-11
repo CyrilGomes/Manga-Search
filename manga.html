@@ -15,8 +15,9 @@
 
   <body>
     <a href="index.html">retour à l'accueil</a>
-
-    <div class="loader" id="loader"></div>
+    <div id="loader">
+      <div class="spinner-border" id="loader"></div>
+  </div>
 
     <div id="main">
       <div class="container">
@@ -25,7 +26,7 @@
         <div id="image"></div>
       </div>
 
-      <div class="content">
+      <div class="content lead">
         <h3>Description</h3>
         <p id="description"></p>
       </div>
@@ -37,24 +38,26 @@
         </h3>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Number of volumes</th>
-            <th>Date of first volume</th>
-            <th>Publisher</th>
-            <th>Magazine</th>
-            <th>Genres</th>
-          </tr>
-        </thead>
-        <tbody>
-          <td id="numberOfVolumes"></td>
-          <td id="startDate"></td>
-          <td id="publisher"></td>
-          <td id="magazine"></td>
-          <td id="genres"></td>
-        </tbody>
-      </table>
+      <div class="content container">
+        <table>
+          <thead>
+            <tr>
+              <th>Number of volumes</th>
+              <th>Date of first volume</th>
+              <th>Publisher</th>
+              <th>Magazine</th>
+              <th>Genres</th>
+            </tr>
+          </thead>
+          <tbody>
+            <td id="numberOfVolumes"></td>
+            <td id="startDate"></td>
+            <td id="publisher"></td>
+            <td id="magazine"></td>
+            <td id="genres"></td>
+          </tbody>
+        </table>
+    </div>
 
       <div class="content">
         <h3>Characters</h3>

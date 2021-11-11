@@ -4,10 +4,9 @@ const main = async () => {
   setTimeout(()=>{
     $('#loader').remove();
     $('#main').css('display','block');
-  },2000);
+  },2500);
 
   const mangaUnformatted = window.location.search.split('=')[1];
-
   //Add a \ just before special characters like () or ' to have a correct SPARQL query
   let manga = '';
   for (let i = 0; i < mangaUnformatted.length; i++) {
@@ -17,6 +16,7 @@ const main = async () => {
     manga += mangaUnformatted[i];
   }
   console.log('finalManga', manga);
+
   const urlSearch = 'http://dbpedia.org/sparql';
   getBasicInfos(manga, urlSearch);
   getCharacters(manga, urlSearch);
