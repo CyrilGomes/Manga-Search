@@ -17,7 +17,7 @@ const main = async () => {
   getCharacters(manga, urlSearch);
   getSameGenreMangas(manga, urlSearch);
 
-  const img = await getWikipediaThumbnail(manga);
+  const img = await getWikipediaThumbnail(mangaUnformatted);
   $('#image').html(img);
 };
 

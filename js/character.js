@@ -68,7 +68,7 @@ const main = async () => {
     },
   });
 
-  const img = await getWikipediaThumbnail(character);
+  const img = await getWikipediaThumbnail(characterUnformatted);
   $('#image').html(img);
 };
 
