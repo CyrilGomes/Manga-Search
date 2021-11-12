@@ -152,14 +152,15 @@
         var query = queryArray.join(" ");
 
         var queryUrl = urlSearch + "?query=" + encodeURIComponent(query) + "&format=json";
-        console.log(queryUrl);
         var data = await $.ajax({
             dataType: "jsonp",
             url: queryUrl,
         });
 
         var grid = $("#displayResults");
-        console.log(data);
+        const bindings = data.results.bindings;
+        
+        /* Mieux de faire notre propre truc pour mettre liens vers nos propres pages (Walid)
         // get the sparql variables from the 'head' of the data.
         var headerVars = data.head.vars;
         // grab the actual results from the data.
@@ -168,11 +169,57 @@
         for (rowIdx in bindings) {
             grid.append(await getGridCell(headerVars, bindings[rowIdx]));
         }
+        */
+
+        for(const row of bindings){
+            const manga = row.manga.value;
+            const author = row.mangaAuthor.value;
+            const demographic = row.mangaDemographic.value;
+            const description  = row.mangaDescription.value;
+            const genres = row.genres.value === "" ? [] : row.genres.value.split('|');
+
+            let cell = "<div class='cell'>";
+            cell+="<div class='container'>";
+            const mangaHtml = "<a class='mangaTitle' href='manga.html?manga="+manga.split('resource/')[1] + "'>"+ formatUri(manga) + '</a>';
+            cell+=mangaHtml;
+            cell+= "</br>";
+
+            const mangaName = manga.split('resource/')[1];
+            const imgUrl = await getWikipediaThumbnail(mangaName);
+            cell+=imgUrl;
+            cell+="</br>";
+            cell+="</div>";
+
+            let authorHtml;
+            if (author.split('resource/')[1] != undefined) {
+                authorHtml="<span class='author'>Author: "+
+                "<a href='author.html?author=" +
+                    author.split('resource/')[1] +
+                    "'>" +
+                    formatUri(author) +
+                    '</a>'+"</span>";
+                ;
+            } else {
+                authorHtml=formatUri(author);
+            }
+            cell+=authorHtml;
+            cell+="</br>";
+
+            cell+=`<p>Manga type: ${demographic}</p>`;
+            cell+=`<p>${description}</p>`;
+
+
+            cell+="</div>";
+
+            grid.append(cell);
+        }
 
 
 
     }
 
+    
+    /*
     async function getGridCell(headerVars, rowData) {
 
         var cell = $("<div class = 'cell'></div>");
@@ -207,6 +254,8 @@
 
         return cell;
     }
+    */
+
 
 
 

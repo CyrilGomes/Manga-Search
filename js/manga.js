@@ -7,14 +7,9 @@ const main = async () => {
   },2500);
 
   const mangaUnformatted = window.location.search.split('=')[1];
+
   //Add a \ just before special characters like () or ' to have a correct SPARQL query
-  let manga = '';
-  for (let i = 0; i < mangaUnformatted.length; i++) {
-    if (['(', ')', '!'].includes(mangaUnformatted[i])) {
-      manga += '\\';
-    }
-    manga += mangaUnformatted[i];
-  }
+  let manga = formatSpecialCharacters(mangaUnformatted);
   console.log('finalManga', manga);
 
   const urlSearch = 'http://dbpedia.org/sparql';

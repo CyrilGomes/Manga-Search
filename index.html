@@ -126,7 +126,7 @@
                 url: url,
                 success: function (data) {
                     data.results.bindings.forEach(manga => {
-                        console.log(manga.manga.value);
+                        // console.log(manga.manga.value);
                         let filteredTitle = manga.manga.value.replaceAll('_', ' ').replace("http://dbpedia.org/resource/", "");
                         $('#titles').append(`<option value="${filteredTitle}"/>`);
                     });

@@ -40,6 +40,8 @@ body {
   justify-content: center;
   align-items: center;
   width: max-content;
+  display: flex;
+  flex-direction: column;
 }
 
 img {

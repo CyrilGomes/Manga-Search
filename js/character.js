@@ -2,13 +2,7 @@ const main = async () => {
   const characterUnformatted = window.location.search.split('=')[1];
 
   //Add a \ just before parenthese to have a correct query after
-  let character = '';
-  for (let i = 0; i < characterUnformatted.length; i++) {
-    if (['(', ')', '!'].includes(characterUnformatted[i])) {
-      character += '\\';
-    }
-    character += characterUnformatted[i];
-  }
+  let character = formatSpecialCharacters(characterUnformatted);
   console.log('finalCharacter', character);
 
   const urlSearch = 'http://dbpedia.org/sparql';

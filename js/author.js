@@ -19,12 +19,14 @@ $(document).ready(() => {
                     {?uri dbp:birthPlace ?birthPlace.}
                     UNION
                     {?uri dbo:birthPlace ?birthPlace.} 
+                    OPTIONAL{
                     {?uri dbp:notableWorks ?work.} 
-                    UNION 
-                    {?uri dbp:notableworks ?work.}
                     UNION
                     {?uri dbo:knownFor ?work.}
+                    UNION
+                    {?uri dbo:notableWork ?work.}
                     ?work dbo:type dbr:Manga.
+                    }
                     OPTIONAL{?uri dbp:yearsActive ?debut .} 
                     OPTIONAL{?uri dbp:awards ?award.} 
                     FILTER(?uri = dbr:${author}
