@@ -45,7 +45,7 @@ let queryParams = new URLSearchParams(window.location.search);
         let queryText = "search.html?";
         if (!(name.val() === "")) queryText += "search=" + name.val() + "&";
         if (rechercheAvancee) {
-            if (!(author.val() === "")) queryText += "author=" + author.val() + "&";
+            if (!(author.val() === "")) queryText += "author=" + author.val().replace(" ","_") + "&";
             if (!(year.val() === "")) queryText += "year=" + new Date(year.val()).getFullYear() + "&";
             if (!(filterText === "")) queryText += "filter=" + filterText + "&";
         }
@@ -96,7 +96,7 @@ let queryParams = new URLSearchParams(window.location.search);
             queryArray.push("&& regex(?startDate, \"" + year + "\", \"i\")");
         }
         if (filter !== "") {
-            queryArray.push("&& regex(?startDate, \"^((?!" + filter + ").)*$\", \"i\")");
+            queryArray.push("&& regex(?manga, \"^((?!" + filter + ").)*$\", \"i\")");
         }
         queryArray.push(") }");
         var query = queryArray.join(" ");
@@ -106,6 +106,7 @@ let queryParams = new URLSearchParams(window.location.search);
             dataType: "jsonp",
             url: queryUrl,
         });
+        console.log(query);
 
         var grid = $("#displayResults");
         const bindings = data.results.bindings;
@@ -155,7 +156,7 @@ let queryParams = new URLSearchParams(window.location.search);
             cell+=authorHtml;
             cell+="</br>";
 
-            cell+=`<p>Manga type: ${demographic}</p>`;
+            cell+=`<p>Manga type: ${formatUri(demographic)}</p>`;
             cell+=`<p>${description}</p>`;
 
 

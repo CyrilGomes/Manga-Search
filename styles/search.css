@@ -170,6 +170,21 @@ img {
     padding:10px;
     width:90%;
     border-radius:1em;
+    border-color:#AC0E35;
+}
+
+.cell:hover {
+  background-color: #AC0E35;
+  color:white;
+  transition: 0.5s;
+}
+
+.cell a{
+    color:#AC0E35;
+}
+.cell:hover a{
+    transition: 0.5s;
+    color:white;
 }
 
 .container {
