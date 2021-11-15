@@ -142,12 +142,12 @@ let queryParams = new URLSearchParams(window.location.search);
 
             let authorHtml;
             if (author.split('resource/')[1] != undefined) {
-                authorHtml="<span class='author'>Author: "+
+                authorHtml="<div class='author'>Author: "+
                 "<a href='author.html?author=" +
                     author.split('resource/')[1] +
                     "'>" +
                     formatUri(author) +
-                    '</a>'+"</span>";
+                    '</a>'+"</div>";
                 ;
             } else {
                 authorHtml=formatUri(author);
