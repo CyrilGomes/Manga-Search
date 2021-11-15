@@ -12,8 +12,8 @@
 </head>
 <body>
 <main>
-    <h1><a href="index.html" style="all: unset; cursor: pointer">Manga <span style="color:#AC0E35;">Search</span></a>
-    </h1>
+    <h1><a href="index.html" style="all: unset; cursor: pointer">Manga <span
+            style="color:#AC0E35;">Search</span></a></h1>
     <div class="form-item">
         <input class="form-control" id="name" placeholder="Chercher un manga par titre" size="40" type="text">
     </div>
@@ -41,7 +41,10 @@
         </div>
     </div>
     <div class="form-item">
-        <button onclick=" search()">Rechercher</button>
+        <button onclick=" search()" id="valider">
+            <div >Rechercher</div>
+            <div><img height="20px" src="Magnifying-Glass-256.png" width="20px"/></div>
+        </button>
     </div>
 </main>
 </script>

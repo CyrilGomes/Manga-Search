@@ -156,8 +156,8 @@ let queryParams = new URLSearchParams(window.location.search);
             cell+=authorHtml;
             cell+="</br>";
 
-            cell+=`<p>Manga type: ${formatUri(demographic)}</p>`;
-            cell+=`<p>${description}</p>`;
+            cell+=`<p class='demographic'>Manga type: ${formatUri(demographic)}</p>`;
+            cell+=`<p class='description'>${description}</p>`;
 
 
             cell+="</div>";
