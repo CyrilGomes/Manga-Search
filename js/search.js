@@ -52,6 +52,7 @@ let queryParams = new URLSearchParams(window.location.search);
         window.location.assign(queryText.substr(0, queryText.length - 1));
     }
     async function mainSearch(uInput, uAuthor, uYear, uFilter) {
+        rechercheAvancee = uAuthor || uYear || uFilter;
         $("#displayResults tr").remove();
         $("#displayResults th").remove();
         $("#displayResults thead").remove();
@@ -89,17 +90,20 @@ let queryParams = new URLSearchParams(window.location.search);
             "OPTIONAL {?manga dbp:numberOfVolumes ?numberOfVolumes}.",
             "FILTER( regex(?manga, \"" + input + "\",\"i\") && lang(?description)=\"en\""]
 
-        if (author !== "") {
+        // Checks both if not empty and not null
+        if (author) {
             queryArray.push("&& regex(?author, \"" + author + "\",\"i\")");
         }
-        if (year !== "") {
-            queryArray.push("&& regex(?startDate, \"" + year + "\", \"i\")");
+        if (year) {
+            queryArray.push(`&& ?startDate < "${year}"^^xsd:dateTime`);
         }
-        if (filter !== "") {
-            queryArray.push("&& regex(?manga, \"^((?!" + filter + ").)*$\", \"i\")");
-        }
+        // if (filter !== "") {
+        //     queryArray.push("&& regex(?manga, \"^((?!" + filter + ").)*$\", \"i\")");
+        // }
         queryArray.push(") }");
         var query = queryArray.join(" ");
+
+        console.log('Final query',query);
 
         var queryUrl = urlSearch + "?query=" + encodeURIComponent(query) + "&format=json";
         var data = await $.ajax({
@@ -110,17 +114,6 @@ let queryParams = new URLSearchParams(window.location.search);
 
         var grid = $("#displayResults");
         const bindings = data.results.bindings;
-        
-        /* Mieux de faire notre propre truc pour mettre liens vers nos propres pages (Walid)
-        // get the sparql variables from the 'head' of the data.
-        var headerVars = data.head.vars;
-        // grab the actual results from the data.
-        var bindings = data.results.bindings;
-        // for each result, make a table row and add it to the table.
-        for (rowIdx in bindings) {
-            grid.append(await getGridCell(headerVars, bindings[rowIdx]));
-        }
-        */
 
         for(const row of bindings){
             const manga = row.manga.value;
@@ -165,47 +158,7 @@ let queryParams = new URLSearchParams(window.location.search);
             grid.append(cell);
         }
 
-
-
     }
-
-    
-    /*
-    async function getGridCell(headerVars, rowData) {
-
-        var cell = $("<div class = 'cell'></div>");
-        for(var i in headerVars){
-            var fieldData = rowData[headerVars[i]];
-            var element = $("<div class = headerVars[i]></div>");
-            var splitedData = fieldData["value"].split("|")
-            for (var ressource in splitedData){
-                var value = $("<div></div>");
-                var arrayData = splitedData[ressource].split("http://dbpedia.org/resource/")
-                console.log(arrayData)
-                var tailleArray = arrayData.length
-                var data = arrayData[tailleArray-1]
-                if (tailleArray === 1){
-                    value.append(fieldData["value"]+" ");
-                }
-                else{
-                    value.append("<a href="+fieldData["value"]+">"+data.replace("_"," ")+"</a> ");
-                }
-                element.append(value)
-            }
-            cell.append(element);
-        }
-        var image = $("<div class = 'image'></div>");
-        fieldData = rowData["manga"];
-        console.log(fieldData);
-        arrayData = fieldData["value"].split("http://dbpedia.org/resource/")
-        tailleArray = arrayData.length
-        data = arrayData[tailleArray-1]
-        image.append(await getWikipediaThumbnail(data));
-        cell.append(image);
-
-        return cell;
-    }
-    */
 
 
 
