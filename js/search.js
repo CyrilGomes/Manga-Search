@@ -29,12 +29,10 @@ let queryParams = new URLSearchParams(window.location.search);
         selectHTML += "</select>";
         newDiv.innerHTML = selectHTML;
         document.getElementById("year-container").appendChild(newDiv);
-        if(input !== null){
-            var author = queryParams.get("author")
-            var year = queryParams.get("year")
-            var filter = queryParams.get("filter")
-            await mainSearch(input, author, year, filter)
-        }
+        var author = queryParams.get("author");
+        var year = queryParams.get("year");
+        var filter = queryParams.get("filter");
+        await mainSearch(input, author, year, filter);
     }
     function search() {
         let name = $('#name');
@@ -56,7 +54,7 @@ let queryParams = new URLSearchParams(window.location.search);
         $("#displayResults tr").remove();
         $("#displayResults th").remove();
         $("#displayResults thead").remove();
-        var input = uInput.replace(" ", "_");
+        var input = uInput ? uInput.replace(" ", "_") : "";
         var author = "";
         var year = "";
         var filter = "";
@@ -100,7 +98,7 @@ let queryParams = new URLSearchParams(window.location.search);
         // if (filter !== "") {
         //     queryArray.push("&& regex(?manga, \"^((?!" + filter + ").)*$\", \"i\")");
         // }
-        queryArray.push(") }");
+        queryArray.push(") } LIMIT 20");
         var query = queryArray.join(" ");
 
         console.log('Final query',query);
