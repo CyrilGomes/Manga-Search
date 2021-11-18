@@ -15,12 +15,12 @@
     <h1><a href="index.html" style="all: unset; cursor: pointer">Manga <span
             style="color:#AC0E35;">Search</span></a></h1>
     <div class="form-item">
-        <input class="form-control" id="name" placeholder="Chercher un manga par titre" size="40" type="text">
+        <input class="form-control" id="name" placeholder="Search for a manga using it's title" size="40" type="text">
     </div>
 
     <div class="form-item">
         <button id="bt-recherche-avancee" style="all: unset; cursor: pointer">
-            <span>Recherche avancée</span>
+            <span>Advanced search</span>
             <img alt="image d'une flèche allant vers le bas"
                  class="rotating-icon"
                  id="i-recherche-avancee"
@@ -30,20 +30,26 @@
         </button>
         <div id="champs-recherche-avancee">
             <div class="form-item">
-                <input class="form-control" id="author" placeholder="Auteur du manga" type="text">
+                <input class="form-control" id="author" placeholder="Manga Author" type="text">
             </div>
-            <span>Séléctionner une date pour afficher les mangas apparus avant cette date.</span>
+
+            <span>Select a date to display the mangas that appeared before that given date.</span>
             <div class="form-item" id="year-container">
             </div>
+
+            <span>Here you can select the manga type</span>
+            <div id="mangaType-container"></div>
+
+
             <div class="form-item">
-                    <textarea class="form-control" id="filter" placeholder="Filtres (1 par ligne)"
+                    <textarea class="form-control" id="filter" placeholder="Filters (1 per line)"
                               type="text"></textarea>
             </div>
         </div>
     </div>
     <div class="form-item">
         <button onclick=" search()" id="valider">
-            <div >Rechercher</div>
+            <div >Search</div>
             <div><img height="20px" src="styles/images/Magnifying-Glass-256.png" width="20px"/></div>
         </button>
     </div>

@@ -18,6 +18,7 @@ let queryParams = new URLSearchParams(window.location.search);
             }
         })
 
+        // Year select html
         let newDiv = document.createElement('div');
         let currYear = new Date().getFullYear();
         let selectHTML = "";
@@ -29,10 +30,22 @@ let queryParams = new URLSearchParams(window.location.search);
         selectHTML += "</select>";
         newDiv.innerHTML = selectHTML;
         document.getElementById("year-container").appendChild(newDiv);
+
+        // MangaType select html
+        let select = "<select class='form-select' id='mangaType'>";
+        select+="<option value=''></option>";
+        const mangaTypes = ["Seinen","Shōnen","Shōjo","Male","Josei"];
+        for(const mangaType of mangaTypes){
+            select+=`<option value='${mangaType}'>${mangaType}</option>`;
+        }
+        select+="</select>";
+        $('#mangaType-container').html(select);
+
         var author = queryParams.get("author");
         var year = queryParams.get("year");
         var filter = queryParams.get("filter");
-        await mainSearch(input, author, year, filter);
+        const mangaType = queryParams.get("mangaType");
+        await mainSearch(input, author, year, filter,mangaType);
     }
     function search() {
         let name = $('#name');
@@ -40,17 +53,19 @@ let queryParams = new URLSearchParams(window.location.search);
         let year = $('#year');
         let filter = $('#filter');
         let filterText = filter.val().replace('\n', ';');
+        let mangaType = $('#mangaType');
         let queryText = "search.html?";
         if (!(name.val() === "")) queryText += "search=" + name.val() + "&";
         if (rechercheAvancee) {
-            if (!(author.val() === "")) queryText += "author=" + author.val().replace(" ","_") + "&";
-            if (!(year.val() === "")) queryText += "year=" + new Date(year.val()).getFullYear() + "&";
-            if (!(filterText === "")) queryText += "filter=" + filterText + "&";
+            if (author.val() !== "") queryText += "author=" + author.val().replace(" ","_") + "&";
+            if (year.val() !== "") queryText += "year=" + new Date(year.val()).getFullYear() + "&";
+            if (filterText !== "") queryText += "filter=" + filterText + "&";
+            if(mangaType.val() !== "") queryText+="mangaType=" + mangaType.val() + "&";
         }
         window.location.assign(queryText.substr(0, queryText.length - 1));
     }
-    async function mainSearch(uInput, uAuthor, uYear, uFilter) {
-        rechercheAvancee = uAuthor || uYear || uFilter;
+    async function mainSearch(uInput, uAuthor, uYear, uFilter, uMangaType) {
+        rechercheAvancee = uAuthor || uYear || uFilter || uMangaType;
         $("#displayResults tr").remove();
         $("#displayResults th").remove();
         $("#displayResults thead").remove();
@@ -58,6 +73,7 @@ let queryParams = new URLSearchParams(window.location.search);
         var author = "";
         var year = "";
         var filter = "";
+        const mangaType = uMangaType || "";
 
         if (rechercheAvancee) {
             author = uAuthor;
@@ -98,6 +114,10 @@ let queryParams = new URLSearchParams(window.location.search);
         // if (filter !== "") {
         //     queryArray.push("&& regex(?manga, \"^((?!" + filter + ").)*$\", \"i\")");
         // }
+
+        if(mangaType){
+            queryArray.push(`&& regex(?demographic,"${mangaType}")`);
+        }
         queryArray.push(") } LIMIT 20");
         var query = queryArray.join(" ");
 

@@ -25,13 +25,13 @@
     <div class="search">
         <div class="form-item" style="display: flex;">
             <input autocomplete="on" class="form-control" id="name" list="titles"
-                   placeholder="Chercher un manga par titre"
+                   placeholder="Search for a manga using it's title"
                    type="search">
             <datalist id="titles"></datalist>
         </div>
         <div class="form-item">
             <button id="bt-recherche-avancee" style="all: unset; cursor: pointer">
-                <span>Recherche avancée</span>
+                <span>Advanced search</span>
                 <img alt="image d'une flèche allant vers le bas"
                      class="rotating-icon"
                      id="i-recherche-avancee"
@@ -41,19 +41,24 @@
             </button>
             <div id="champs-recherche-avancee">
                 <div class="form-item">
-                    <input class="form-control" id="author" placeholder="Auteur du manga" type="text">
+                    <input class="form-control" id="author" placeholder="Manga Author" type="text">
                 </div>
+                <span>Select a date to display the mangas that appeared before that given date.</span>
                 <div class="form-item" id="year-container">
                 </div>
+
+                <span>Here you can select the manga type</span>
+                <div id="mangaType-container"></div>
+
                 <div class="form-item">
-                    <textarea class="form-control" id="filter" placeholder="Filtres (1 par ligne)"
+                    <textarea class="form-control" id="filter" placeholder="Filters (1 per line)"
                               type="text"></textarea>
                 </div>
             </div>
         </div>
         <div class="form-item">
             <button id="valider">
-                <div>Rechercher</div>
+                <div>Search</div>
                 <div><img height="20px" src="styles/images/Magnifying-Glass-256.png" width="20px"/></div>
             </button>
         </div>
@@ -61,6 +66,7 @@
 </main>
 <script type="text/javascript">
     $(document).ready(function () {
+        // Year select html
         let newDiv = document.createElement('div');
         let currYear = new Date().getFullYear();
         let selectHTML = "<select class='form-select' id='year'>";
@@ -71,6 +77,16 @@
         selectHTML += "</select>";
         newDiv.innerHTML = selectHTML;
         document.getElementById("year-container").appendChild(newDiv);
+
+        // MangaType select html
+        let select = "<select class='form-select' id='mangaType'>";
+        select+="<option value=''></option>";
+        const mangaTypes = ["Seinen","Shōnen","Shōjo","Male","Josei"];
+        for(const mangaType of mangaTypes){
+            select+=`<option value='${mangaType}'>${mangaType}</option>`;
+        }
+        select+="</select>";
+        $('#mangaType-container').html(select);
 
 
         let btSearch = $('#valider');
@@ -84,13 +100,15 @@
             let year = $('#year');
             let filter = $('#filter');
             let filterText = filter.val().replace('\n', ';');
+            let mangaType = $('#mangaType');
             let queryText = "search.html?";
             if (!(name.val() === "")) queryText += "search=" + name.val() + "&";
             if (rechercheAvancee) {
-                if (!(author.val() === "")) queryText += "author=" + author.val() + "&";
-                if (!(year.val() === "")) queryText += "year=" + new Date(year.val()).getFullYear() + "&";
-                if (!(filterText === "")) queryText += "filter=" + filterText + "&";
-            }
+                if (author.val() !== "") queryText += "author=" + author.val().replace(" ","_") + "&";
+                if (year.val() !== "") queryText += "year=" + new Date(year.val()).getFullYear() + "&";
+                if (filterText !== "") queryText += "filter=" + filterText + "&";
+                if(mangaType.val() !== "") queryText+="mangaType=" + mangaType.val() + "&";
+        }
             window.location.assign(queryText.substr(0, queryText.length - 1));
         }
 
