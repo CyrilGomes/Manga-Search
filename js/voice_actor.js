@@ -25,7 +25,7 @@ $(document).ready(() => {
     FILTER(?uri=dbr:${voiceActor} 
     && regex(?fromManga,"manga","i")
     && lang(?name)="en" 
-    &&( lang(?description)="en"|| lang(?description)="fr") 
+    &&( lang(?description)="en") 
     ) 
     }  `;
 
