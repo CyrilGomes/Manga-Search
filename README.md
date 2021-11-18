@@ -17,7 +17,8 @@ On peut aussi ne pas choisir un manga de l'autocomplete et plutôt mettre des mo
 On a aussi des options avancées pour filtrer les résultats:
 
 - Filtrer par *le nom de l'auteur(mangaka)*. Il faut mettre le nom complet du mangaka par example: _Eiichiro Oda_
-- Filter par date d'apparition du manga.
+- Filter par date d'apparition du manga: On sélectionne un année précise et on récupère les mangas apparus avant cette date.
+- Filter par type de manga: Plusieurs options sont disponibles.
 
 
 A partir de la liste des mangas on peut naviguer vers la page manga ou la page de l'auteur à partir des liens clickables (leur nom).
