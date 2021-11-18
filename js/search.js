@@ -111,9 +111,9 @@ let queryParams = new URLSearchParams(window.location.search);
         if (year) {
             queryArray.push(`&& ?startDate < "${year}"^^xsd:dateTime`);
         }
-        // if (filter !== "") {
-        //     queryArray.push("&& regex(?manga, \"^((?!" + filter + ").)*$\", \"i\")");
-        // }
+        if (filter) {
+            queryArray.push("&& regex(?manga, \"^((?!" + filter + ").)*$\", \"i\")");
+        }
 
         if(mangaType){
             queryArray.push(`&& regex(?demographic,"${mangaType}")`);
