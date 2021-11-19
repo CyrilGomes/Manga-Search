@@ -118,7 +118,7 @@ let queryParams = new URLSearchParams(window.location.search);
         if(mangaType){
             queryArray.push(`&& regex(?demographic,"${mangaType}")`);
         }
-        queryArray.push(") } LIMIT 20");
+        queryArray.push(") } LIMIT 40");
         var query = queryArray.join(" ");
 
         console.log('Final query',query);
