@@ -1,4 +1,5 @@
 $(document).ready(() => {
+  // Get author name from current window url paramaters
     const author = window.location.search.split('=')[1];
     const urlSearch = 'http://dbpedia.org/sparql';
 
@@ -38,7 +39,8 @@ $(document).ready(() => {
     const queryUrl =
       urlSearch + '?query=' + encodeURIComponent(query) + '&format=json';
     console.log(queryUrl);
-
+    
+    // Ajax http request to dbpedia
     $.ajax({
       dataType: 'jsonp',
       url: queryUrl,
@@ -53,6 +55,7 @@ $(document).ready(() => {
         let debut = "unknown";
         let awards = "no awards";
 
+        // Make links of the author's mangas to manga.html
         let worksHtml = '<ul>';
         for (const work of works) {
           let workForm = formatUri(work);
@@ -77,8 +80,11 @@ $(document).ready(() => {
           }
           awardsHtml += '</ul>';
         }
-
+        
+        // Change page title to show the author's name
         document.title = name;
+
+        // Inject the informations into the html page dynamically
         $('#name').text(name);
         $('#description').text(description);
         $('#birthDate').text(dateBirth);

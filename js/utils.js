@@ -7,6 +7,7 @@ const formatUri = (uri) => {
   }
 };
 
+// Converts array of ressources into html list of items
 const arrayToHtml = (array) => {
   let html = '<ul>';
   for (const uri of array) {

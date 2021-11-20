@@ -6,6 +6,7 @@ const main = async () => {
     $('#main').css('display','block');
   },2500);
 
+  // Get manga name from current window url paramaters
   const mangaUnformatted = window.location.search.split('=')[1];
 
   //Add a \ just before special characters like () or ' to have a correct SPARQL query
@@ -17,10 +18,12 @@ const main = async () => {
   getCharacters(manga, urlSearch);
   getSameGenreMangas(manga, urlSearch);
 
+  // Get manga's image and add it to the html page
   const img = await getWikipediaThumbnail(mangaUnformatted);
   $('#image').html(img);
 };
 
+// Get basic informations of the manga like title author ...
 const getBasicInfos = (manga, urlSearch) => {
   const query = `SELECT ?name ?description ?startDate ?author ?publisher ?magazine ?numberOfVolumes GROUP_CONCAT(DISTINCT ?genre; separator="|") as ?genres WHERE {
     ?uri rdfs:label ?name ;
@@ -62,6 +65,7 @@ const getBasicInfos = (manga, urlSearch) => {
   const queryUrl =
     urlSearch + '?query=' + encodeURIComponent(query) + '&format=json';
 
+  // Ajax http request to dbpedia
   $.ajax({
     dataType: 'jsonp',
     url: queryUrl,
@@ -81,9 +85,14 @@ const getBasicInfos = (manga, urlSearch) => {
         genres = data.results.bindings[0].genres.value.split('|');
       }
 
+      // Change page title to show the manga's name
       document.title = name;
+
+      // Inject the informations into the html page dynamically
       $('#name').text(name);
       $('#description').text(description);
+
+      // If author is a dbpedia resource we make it as a link to author.html page
       if (author.split('resource/')[1] != undefined) {
         $('#author').html(
           "<a href='author.html?author=" +
@@ -105,6 +114,7 @@ const getBasicInfos = (manga, urlSearch) => {
   });
 };
 
+// Get some characters appearing in the manga
 const getCharacters = (manga, urlSearch) => {
   const query = `SELECT ?characters WHERE { 
         ?characters dbo:series ?uri 
@@ -140,6 +150,8 @@ const getCharacters = (manga, urlSearch) => {
   });
 };
 
+
+// Get 10 mangas in the same genre 
 const getSameGenreMangas = (manga, urlSearch) => {
   const query = `SELECT ?manga WHERE { 
         ?uri dbp:genre ?genre. 

@@ -4,6 +4,7 @@ let queryParams = new URLSearchParams(window.location.search);
     $(document).ready(init)
     let rechercheAvancee = false
     async function init() {
+        // Toggle on and off of advanced search
         let btAdvancedSearch = $('#bt-recherche-avancee');
         btAdvancedSearch.click(function () {
             let iconeRecherche = $('#i-recherche-avancee');
@@ -23,6 +24,7 @@ let queryParams = new URLSearchParams(window.location.search);
         let currYear = new Date().getFullYear();
         let selectHTML = "";
         selectHTML = "<select class='form-select' id='year'>";
+        // We add an option for each year from 1970 to currentYear
         for (i = 1970; i < currYear; i = i + 1) {
             selectHTML += "<option value='" + i + "'>" + i + "</option>";
         }
@@ -41,12 +43,15 @@ let queryParams = new URLSearchParams(window.location.search);
         select+="</select>";
         $('#mangaType-container').html(select);
 
+        // Get url paramaters to pass on the search
         var author = queryParams.get("author");
         var year = queryParams.get("year");
         var filter = queryParams.get("filter");
         const mangaType = queryParams.get("mangaType");
         await mainSearch(input, author, year, filter,mangaType);
     }
+
+    // Search function that redirects to search.html onclick
     function search() {
         let name = $('#name');
         let author = $('#author');
@@ -64,6 +69,8 @@ let queryParams = new URLSearchParams(window.location.search);
         }
         window.location.assign(queryText.substr(0, queryText.length - 1));
     }
+
+    // Main search function called when we land on this page, it lauches a dbpedia request to get all the mangas
     async function mainSearch(uInput, uAuthor, uYear, uFilter, uMangaType) {
         rechercheAvancee = uAuthor || uYear || uFilter || uMangaType;
         $("#displayResults tr").remove();
@@ -104,6 +111,7 @@ let queryParams = new URLSearchParams(window.location.search);
             "OPTIONAL {?manga dbp:numberOfVolumes ?numberOfVolumes}.",
             "FILTER( regex(?manga, \"" + input + "\",\"i\") && lang(?description)=\"en\""]
 
+        // Add more filters depending on advanced search params 
         // Checks both if not empty and not null
         if (author) {
             queryArray.push("&& regex(?author, \"" + author + "\",\"i\")");
@@ -124,15 +132,18 @@ let queryParams = new URLSearchParams(window.location.search);
         console.log('Final query',query);
 
         var queryUrl = urlSearch + "?query=" + encodeURIComponent(query) + "&format=json";
+        // Ajax http request to dbpedia
         var data = await $.ajax({
             dataType: "jsonp",
             url: queryUrl,
         });
         console.log(query);
 
+        // We create a grid where we'll display the results
         var grid = $("#displayResults");
         const bindings = data.results.bindings;
 
+        // For each manga we create a cell where we display some manga information
         for(const row of bindings){
             const manga = row.manga.value;
             const author = row.mangaAuthor.value;
@@ -140,18 +151,21 @@ let queryParams = new URLSearchParams(window.location.search);
             const description  = row.mangaDescription.value;
             const genres = row.genres.value === "" ? [] : row.genres.value.split('|');
 
+            // Creating the cell and adding manga title as a link to manga.html page
             let cell = "<div class='cell'>";
             cell+="<div class='container'>";
             const mangaHtml = "<a class='mangaTitle' href='manga.html?manga="+manga.split('resource/')[1] + "'>"+ formatUri(manga) + '</a>';
             cell+=mangaHtml;
             cell+= "</br>";
 
+            // Add image of the manga to the cell
             const mangaName = manga.split('resource/')[1];
             const imgUrl = await getWikipediaThumbnail(mangaName);
             cell+=imgUrl;
             cell+="</br>";
             cell+="</div>";
 
+            // Adding the author as a link to author.html page
             let authorHtml;
             if (author.split('resource/')[1] != undefined) {
                 authorHtml="<div class='author'>Author: "+
@@ -167,12 +181,14 @@ let queryParams = new URLSearchParams(window.location.search);
             cell+=authorHtml;
             cell+="</br>";
 
+            // Add mangaType and a short description
             cell+=`<p class='demographic'>Manga type: ${formatUri(demographic)}</p>`;
             cell+=`<p class='description'>${description}</p>`;
 
 
             cell+="</div>";
 
+            // Add the cell to the final grid
             grid.append(cell);
         }
 

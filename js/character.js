@@ -1,4 +1,5 @@
 const main = async () => {
+  // Get character's name from current window url paramaters
   const characterUnformatted = window.location.search.split('=')[1];
 
   //Add a \ just before parenthese to have a correct query after
@@ -21,6 +22,7 @@ const main = async () => {
   const queryUrl =
     urlSearch + '?query=' + encodeURIComponent(query) + '&format=json';
 
+  // Ajax http request to dbpedia
   $.ajax({
     dataType: 'jsonp',
     url: queryUrl,
@@ -33,11 +35,15 @@ const main = async () => {
       const mangas = data.results.bindings[0].mangas.value.split('|');
       const voiceActors = data.results.bindings[0].voiceActors.value.split('|');
 
+      // Change page title to show the character's name
       document.title = name;
+
+      // Inject the informations into the html page dynamically
       $('#name').text(name);
       $('#description').text(description);
       $('#firstAppearance').text(firstAppearance);
 
+      // Voice actors of the character, we link them to voice_actor.html page
       let vaHtml = '<ul>';
       voiceActors.forEach((voiceActURI) => {
         vaHtml += '<li>';
@@ -52,6 +58,7 @@ const main = async () => {
 
       $('#voiceActors').html(vaHtml);
 
+      // Mangas where the character is in we link it to the page manga.html
       let mangasHtml = '<ul>';
       mangas.forEach((mangaUri) => {
         mangasHtml += '<li>';
@@ -68,6 +75,7 @@ const main = async () => {
     },
   });
 
+  // Get character's image and add it to the html page
   const img = await getWikipediaThumbnail(characterUnformatted);
   $('#image').html(img);
 };

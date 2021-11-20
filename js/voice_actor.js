@@ -1,4 +1,5 @@
 $(document).ready(() => {
+    // Get voice actor name from current window url paramaters
     const voiceActor = window.location.search.split('=')[1];
     const urlSearch = 'http://dbpedia.org/sparql';
 
@@ -33,6 +34,7 @@ $(document).ready(() => {
       urlSearch + '?query=' + encodeURIComponent(query) + '&format=json';
     console.log(queryUrl);
 
+    // Ajax http request to dbpedia
     $.ajax({
       dataType: 'jsonp',
       url: queryUrl,
@@ -58,6 +60,7 @@ $(document).ready(() => {
             debut = data.results.bindings[0].debutVoiceAct.value;
         }
 
+        // Characters that he voices, we link them to character.html page
         let voicesHtml = voices;
         if(data.results.bindings[0].voices != undefined){
             voices = data.results.bindings[0].voices.value.split("|");
@@ -71,7 +74,10 @@ $(document).ready(() => {
           }
         
 
+        // Change page title to show the manga's name
         document.title = name;
+
+        // Inject the informations into the html page dynamically
         $('#name').text(name);
         $('#description').text(description);
         $('#birthDate').text(formatUri(dateBirth));

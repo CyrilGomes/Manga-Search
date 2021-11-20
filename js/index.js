@@ -27,6 +27,7 @@ $(document).ready(function () {
     let inputTitle = $('#name');
     let rechercheAvancee = false;
 
+    // Prepare url paramaters to send to the search.html page
     function sendSearch() {
         let name = $('#name');
         let author = $('#author');
@@ -45,16 +46,19 @@ $(document).ready(function () {
         window.location.assign(queryText.substr(0, queryText.length - 1));
     }
 
+    // Launch search on button click
     btSearch.click(function () {
         sendSearch();
     });
 
+    // Launch search when we press enter on keyboard
     inputTitle.on('keydown', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
             sendSearch();
         }
     });
 
+    // Advanced search button toggle on and off onclick
     btAdvancedSearch.click(function () {
         let iconeRecherche = $('#i-recherche-avancee');
         if (rechercheAvancee) {
@@ -68,6 +72,7 @@ $(document).ready(function () {
         }
     })
 
+    // Auto-complete
     inputTitle.on('input', function () {
         let inputText = $(this).val().replaceAll(" ", "_");
         let contenu_requete = "SELECT DISTINCT ?manga WHERE {?manga dbo:type dbr:Manga. FILTER(regex(?manga, \"" + inputText + "\",\"i\"))} LIMIT 20";
