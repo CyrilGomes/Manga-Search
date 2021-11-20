@@ -1,10 +1,9 @@
 const main = async () => {
-  
   // Hides the loading and displays content after 2 secs
-  setTimeout(()=>{
+  setTimeout(() => {
     $('#loader').remove();
-    $('#main').css('display','block');
-  },2500);
+    $('#main').css('display', 'block');
+  }, 2500);
 
   // Get manga name from current window url paramaters
   const mangaUnformatted = window.location.search.split('=')[1];
@@ -150,8 +149,7 @@ const getCharacters = (manga, urlSearch) => {
   });
 };
 
-
-// Get 10 mangas in the same genre 
+// Get 10 mangas in the same genre
 const getSameGenreMangas = (manga, urlSearch) => {
   const query = `SELECT ?manga WHERE { 
         ?uri dbp:genre ?genre. 

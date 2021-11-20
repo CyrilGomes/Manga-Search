@@ -23,24 +23,27 @@ const arrayToHtml = (array) => {
 // Get the thumbnail image from the ressource's wikipedia page
 async function getWikipediaThumbnail(resourceName) {
   var url =
-    "https://en.wikipedia.org/w/api.php?action=query&format=json&pilicense=any&formatversion=2&prop=pageimages|pageterms&piprop=original&titles=" +
+    'https://en.wikipedia.org/w/api.php?action=query&format=json&pilicense=any&formatversion=2&prop=pageimages|pageterms&piprop=original&titles=' +
     resourceName;
 
   var data = await $.ajax({
-    dataType: "jsonp",
+    dataType: 'jsonp',
     url: url,
   });
 
   try {
-    return "<img alt='Image not found' src="+data["query"]["pages"][0]["original"]["source"]+"></img>";
+    return (
+      "<img alt='Image not found' src=" +
+      data['query']['pages'][0]['original']['source'] +
+      '></img>'
+    );
   } catch (error) {
     return "<img src='' alt='Image not found'></img>";
   }
-  
 }
 
 // Add a \ just before special characters like () or ' to have a correct SPARQL query
-const formatSpecialCharacters = (name)=>{
+const formatSpecialCharacters = (name) => {
   let finalName = '';
   for (let i = 0; i < name.length; i++) {
     if (['(', ')', '!'].includes(name[i])) {
@@ -49,4 +52,4 @@ const formatSpecialCharacters = (name)=>{
     finalName += name[i];
   }
   return finalName;
-}
+};
